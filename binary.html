@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Binary Translator: Text to Binary and Back</title>
+<meta name="description" content="Free binary translator. Turn text into binary, decode binary to text, and convert decimal, binary and hex. Runs in your browser. Sir E approves.....">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tabs button{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:10px 16px;font:700 .95rem var(--font);cursor:pointer;min-height:44px}
+.tabs button[aria-selected="true"]{background:var(--violet);color:#fff;border-color:var(--violet)}
+.dir{display:flex;gap:8px;margin-bottom:8px}
+.dir button{flex:1;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:10px;font:700 .95rem var(--font);cursor:pointer;min-height:44px}
+.dir button[aria-pressed="true"]{border-color:var(--pink);color:var(--pink)}
+label{display:block;font-weight:700;margin:14px 0 6px}
+textarea,input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:15px/1.5 var(--mono)}
+textarea{min-height:120px;resize:vertical}
+textarea.res{border-color:var(--cyan)}
+.opts{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:10px;color:var(--muted);font-size:.9rem}
+.opts label{margin:0;font-weight:600;display:flex;align-items:center;gap:6px}
+.opts select{width:auto;padding:6px 8px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.stats span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font:600 .82rem var(--mono);color:var(--cyan)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.msgb{min-height:1.6em;margin-top:10px;color:var(--orange);font-size:.95rem}
+.sire{min-height:1.6em;color:var(--pink);font-family:var(--mono);font-size:.95rem}
+.sw{display:flex;align-items:center;gap:8px;font-weight:700}
+.sw input{width:22px;height:22px;accent-color:var(--pink)}
+.chaos .card{box-shadow:0 0 30px var(--pink)}
+.chaos #rain{opacity:.65}
+table.pv{border-collapse:collapse;font-family:var(--mono);margin:10px 0}
+table.pv td,table.pv th{border:1px solid var(--line);padding:6px 10px;text-align:center}
+details{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:700;min-height:32px}
+code{font-family:var(--mono);color:var(--cyan)}
+.clock{display:flex;gap:10px;justify-content:center;margin:18px 0}
+.clock .col{display:flex;flex-direction:column;gap:8px;align-items:center}
+.clock .gap{width:14px}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--bg2);border:2px solid var(--line)}
+.dot.on{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.dot.x{opacity:.2}
+.dn{font:700 1.1rem var(--mono);color:var(--orange);min-height:1.6em}
+#cs-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+table.cs{width:100%;font-size:.85rem}
+table.cs caption{font-weight:700;color:var(--pink);text-align:left;padding-bottom:4px}
+#dm-bin{word-break:break-word;display:block;background:var(--bg2);border:2px solid var(--line);border-radius:8px;padding:12px;margin:10px 0}
+@media print{body *{visibility:hidden}#cs,#cs *{visibility:visible}#cs{position:absolute;left:0;top:0;width:100%;background:#fff!important;color:#000!important;box-shadow:none}#cs table td,#cs table th,#cs caption{border-color:#000;color:#000;background:#fff}#cs-actions,#cs>p{display:none}#rain{display:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+
+<section class="hero" style="padding-bottom:10px">
+<h1>Binary Lab</h1>
+<p class="tag">Say it in 0s and 1s. Sir E will say Ok.....</p>
+<p class="sub">A free binary translator that runs in your browser. Nothing you type is sent anywhere.</p>
+<label class="sw"><input type="checkbox" id="chaos"> Chaos mode</label>
+</section>
+
+<div class="tabs" role="tablist" aria-label="Binary Lab tools">
+<button role="tab" aria-selected="true" data-tab="tr" id="tab-tr">Translator</button>
+<button role="tab" aria-selected="false" data-tab="nm" id="tab-nm">Number converter</button>
+<button role="tab" aria-selected="false" data-tab="bd" id="tab-bd">Name badge</button>
+<button role="tab" aria-selected="false" data-tab="ck" id="tab-ck">Binary clock</button>
+<button role="tab" aria-selected="false" data-tab="cs" id="tab-cs">Cheat sheet</button>
+<button role="tab" aria-selected="false" data-tab="dm" id="tab-dm">Daily message</button>
+</div>
+
+<section id="tr" class="card" role="tabpanel" aria-labelledby="tab-tr">
+<div class="dir" role="group" aria-label="Direction">
+<button id="t2b" type="button" aria-pressed="true">Text to binary</button>
+<button id="b2t" type="button" aria-pressed="false">Binary to text</button>
+</div>
+<label for="inp" id="inl">Text</label>
+<textarea id="inp" spellcheck="false" placeholder="Type something, like: Hello"></textarea>
+<div class="stats" aria-live="polite"><span id="s-ch">Characters: 0</span><span id="s-by">Bytes: 0</span><span id="s-bi">Bits: 0</span></div>
+<div class="opts">
+<label>Encoding <select id="enc"><option value="utf8">UTF-8</option><option value="ascii">ASCII</option></select></label>
+<label id="spw"><input type="checkbox" id="sp" checked> Space between bytes</label>
+<label id="lbw">Line break <select id="lb"><option value="0">None</option><option value="8">Every 8 bytes</option><option value="16">Every 16 bytes</option><option value="32">Every 32 bytes</option></select></label>
+</div>
+<label for="out" id="outl">Binary</label>
+<textarea id="out" class="res" readonly></textarea>
+<div class="msgb" id="msg" role="status"></div>
+<div class="sire" id="sire" aria-live="polite"></div>
+<div class="row2">
+<button class="btn small" id="copy" type="button">Copy result</button>
+<button class="btn small alt" id="swap" type="button">Swap</button>
+<button class="btn small alt" id="clr" type="button">Clear</button>
+<button class="btn small alt" id="open" type="button">Open text file</button>
+<button class="btn small alt" id="dl" type="button">Download result</button>
+<input type="file" id="file" accept=".txt,text/plain" hidden>
+</div>
+</section>
+
+<section id="nm" class="card" role="tabpanel" aria-labelledby="tab-nm" hidden>
+<p class="muted">Type a number in any box and the others follow. Whole numbers only.</p>
+<label for="n-dec">Decimal</label><input type="text" id="n-dec" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="65">
+<label for="n-bin">Binary</label><input type="text" id="n-bin" autocomplete="off" spellcheck="false" placeholder="0100 0001">
+<label for="n-hex">Hex</label><input type="text" id="n-hex" autocomplete="off" spellcheck="false" placeholder="41">
+<div class="msgb" id="nmsg" role="status"></div>
+</section>
+
+<section id="bd" class="card" role="tabpanel" aria-labelledby="tab-bd" hidden>
+<p class="muted">Type a nickname or first name. The badge is made in your browser and nothing is sent anywhere.</p>
+<label for="bd-name">Name on the badge</label>
+<input type="text" id="bd-name" maxlength="20" autocomplete="off" placeholder="Nickname">
+<canvas id="bd-cv" width="800" height="420" role="img" aria-label="Your binary name badge" style="max-width:100%;height:auto;border-radius:12px;margin-top:14px"></canvas>
+<div class="row2"><button class="btn small" id="bd-dl" type="button">Download badge</button></div>
+</section>
+
+<section id="ck" class="card" role="tabpanel" aria-labelledby="tab-ck" hidden>
+<p class="muted">Each column is one digit of the time. Add up the glowing dots (8, 4, 2, 1) to read it.</p>
+<div id="clock" class="clock" aria-hidden="true"></div>
+<p class="ticker" id="ck-time" style="text-align:center"></p>
+<label class="sw"><input type="checkbox" id="ck-num" checked> Show the digits</label>
+</section>
+
+<section id="cs" class="card" role="tabpanel" aria-labelledby="tab-cs" hidden>
+<p class="muted">Letters, numbers and symbols in decimal and 8-bit binary (ASCII).</p>
+<div class="row2" id="cs-actions"><button class="btn small" id="cs-print" type="button">Print this cheat sheet</button></div>
+<div id="cs-body" style="margin-top:14px"></div>
+</section>
+
+<section id="dm" class="card" role="tabpanel" aria-labelledby="tab-dm" hidden>
+<p class="muted">A new secret message every day. Decode it in the Translator, or in your head if you are brave.</p>
+<code id="dm-bin"></code>
+<label for="dm-in">Your decoded answer</label>
+<input type="text" id="dm-in" maxlength="80" autocomplete="off">
+<div class="row2">
+<button class="btn small" id="dm-chk" type="button">Check</button>
+<button class="btn small alt" id="dm-hint" type="button">Hint</button>
+<button class="btn small alt" id="dm-send" type="button">Send to Translator</button>
+<button class="btn small alt" id="dm-rev" type="button">Show answer</button>
+</div>
+<div class="msgb" id="dm-msg" role="status"></div>
+<div class="sire" id="dm-sire" aria-live="polite"></div>
+<p class="muted">Days solved in a row: <b id="dm-streak">0</b></p>
+</section>
+
+<section aria-labelledby="lt">
+<h2 id="lt">How binary works in 60 seconds</h2>
+<p>Computers store everything as <b>bits</b>, tiny switches that are either 0 or 1. Eight bits make one <b>byte</b>, and one byte is enough for one basic character.</p>
+<p>Each bit in a byte is worth double the one on its right:</p>
+<table class="pv"><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr><tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr></table>
+<p>Add up the places that hold a 1: 64 + 1 = 65. In ASCII and UTF-8, 65 is the letter <b>A</b>. So <code>01000001</code> means A, and <code>01001000 01101001</code> means Hi.</p>
+<p><b>ASCII</b> covers 128 basic characters: English letters, digits and punctuation. <b>UTF-8</b> covers every language and emoji, using 1 to 4 bytes per character, and matches ASCII for the first 128.</p>
+</section>
+
+<section aria-labelledby="ft">
+<h2 id="ft">Questions people ask</h2>
+<details><summary>How do I convert text to binary?</summary><p>Pick Text to binary, type your text, and the binary appears as you type. Each character becomes one or more 8-bit groups.</p></details>
+<details><summary>How do I decode binary to text?</summary><p>Pick Binary to text and paste your 0s and 1s. Spaces and commas are ignored, but the total must be a multiple of 8.</p></details>
+<details><summary>Why must the length be a multiple of 8?</summary><p>Every character is stored in whole bytes, and a byte has 8 bits. A missing bit means the last character is broken.</p></details>
+<details><summary>Is my text sent anywhere?</summary><p>No. Everything runs inside your browser on your own device.</p></details>
+<details><summary>How do I turn binary into a decimal number?</summary><p>Use the Number converter tab, or add up the place values that hold a 1, like 64 + 1 = 65.</p></details>
+</section>
+
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This tool needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="binary.js" defer></script>
+</body>
+</html>
