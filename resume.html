@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Resume Builder: Fake and Serious Mode</title>
+<meta name="description" content="Build a ridiculous fake resume or a clean one-page student resume. Includes a bullet roaster and print to PDF. Runs in your browser.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],textarea,select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+textarea{min-height:76px;resize:vertical}
+.modes{display:flex;gap:8px;margin-bottom:6px}
+.modes button{flex:1;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:10px;font:700 .95rem var(--font);cursor:pointer;min-height:44px}
+.modes button[aria-pressed="true"]{border-color:var(--pink);color:var(--pink)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.cv{background:#fff;color:#111;border-radius:8px;padding:22px;font:15px/1.5 Georgia,serif;max-width:720px;margin:14px auto}
+.cv h2{font-size:1.7rem;margin:0;color:#111}
+.cv p{margin:0 0 6px;color:#333}
+.cv h3{font:700 .8rem var(--font);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;color:#5a24c7;border-bottom:1px solid #ccc}
+.cv ul{margin:4px 0 0;padding-left:1.2em}.cv li{margin:2px 0;color:#111}
+.t-neon{border-left:8px solid #c21d72}.t-neon h2{color:#5a24c7}
+.t-clean{font-family:Arial,sans-serif}.t-clean h3{color:#333}
+.t-classic .ch{text-align:center;border-bottom:2px solid #111;padding-bottom:6px}.t-classic h3{color:#111}
+#checks{list-style:none;padding:0;margin:10px 0}#checks li{margin:4px 0}
+.out2{font:700 1.05rem var(--mono);color:var(--orange);margin-top:12px;min-height:2em}
+[hidden]{display:none!important}
+@media print{body *{visibility:hidden}#cvwrap,#cvwrap *{visibility:visible}#cvwrap{position:absolute;left:0;top:0;width:100%}.cv{margin:0;max-width:none;border-radius:0}#rain{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+
+<section class="hero" style="padding-bottom:10px">
+<h1>Resume Office</h1>
+<p class="tag">Turn nothing into a one-page CV.</p>
+<p class="sub">Build a ridiculous fake resume, or switch to Serious mode for a clean student resume. Everything stays in your browser.</p>
+</section>
+
+<section aria-labelledby="hd">
+<h2 id="hd">Help desk</h2>
+<div class="card">
+<button class="btn" id="helpbtn" type="button">Ask: What is a resume?</button>
+<div id="helpout" class="out2" aria-live="polite"></div>
+</div>
+</section>
+
+<section aria-labelledby="bl">
+<h2 id="bl">Resume builder</h2>
+<div class="card">
+<div class="modes" role="group" aria-label="Mode">
+<button id="mfake" type="button" aria-pressed="true">Fake mode</button>
+<button id="mser" type="button" aria-pressed="false">Serious mode</button>
+</div>
+<p class="muted" id="mnote">Funny sections are added for you. Your own lines are mixed in.</p>
+<label for="f-name">Name or nickname</label><input type="text" id="f-name" maxlength="30" autocomplete="off" placeholder="A nickname is fine">
+<label for="f-role">Role you want</label><input type="text" id="f-role" maxlength="40" autocomplete="off" placeholder="Junior web developer">
+<label for="f-skills">Skills (commas or new lines)</label><textarea id="f-skills" placeholder="HTML, CSS, JavaScript"></textarea>
+<label for="f-proj">Projects (one per line)</label><textarea id="f-proj" placeholder="Built a class timetable page"></textarea>
+<label for="f-edu">Education</label><input type="text" id="f-edu" maxlength="80" autocomplete="off" placeholder="Coding club, 2026">
+<div id="ghw" hidden><label for="f-gh">GitHub link</label><input type="text" id="f-gh" maxlength="60" autocomplete="off" placeholder="github.com/your-nickname"></div>
+<label for="tpl">Template</label>
+<select id="tpl"><option value="neon">Neon</option><option value="clean">Clean</option><option value="classic">Classic</option></select>
+<div class="row2">
+<button class="btn small" id="shuf" type="button">Shuffle jokes</button>
+<button class="btn small" id="worse" type="button">Make it worse</button>
+<button class="btn small alt" id="prt" type="button">Print or save as PDF</button>
+</div>
+</div>
+<ul id="checks" hidden></ul>
+<div id="cvwrap"><div id="cv" class="cv t-neon"></div></div>
+</section>
+
+<section aria-labelledby="rb">
+<h2 id="rb">Bullet Roaster</h2>
+<div class="card">
+<label for="rb-in">Paste one resume line</label>
+<input type="text" id="rb-in" maxlength="200" autocomplete="off" placeholder="Responsible for building websites">
+<div class="row2"><button class="btn small" id="rb-btn" type="button">Roast it</button></div>
+<div class="out2" id="rb-out" aria-live="polite"></div>
+</div>
+</section>
+
+<section aria-labelledby="gu">
+<h2 id="gu">What goes on a student resume</h2>
+<ul>
+<li>Your name or nickname and the role you want.</li>
+<li>Three or more skills you really have.</li>
+<li>Two or more projects, each starting with an action word like Built or Fixed.</li>
+<li>Your education or club.</li>
+<li>A link to your public GitHub. Make sure it is public.....</li>
+<li>One page only, with no phone number or home address for practice versions.</li>
+</ul>
+</section>
+
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This tool needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="resume.js" defer></script>
+</body>
+</html>
