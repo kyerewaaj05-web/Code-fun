@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notice Board: Important Notices, Mostly Dots</title>
+<meta name="description" content="A funny school-style notice board with pinned notices, bold and italic emphasis and links to real learning resources.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+.cert{background:#fffdf4;color:#1d1238;border:10px double #5a24c7;border-radius:6px;padding:24px 16px;text-align:center;max-width:680px;margin:16px auto;font-family:Georgia,serif}
+.cert h2{color:#c21d72;font-size:clamp(1.5rem,6vw,2.2rem);margin:.3em 0}.cert .nm{font-size:clamp(1.6rem,7vw,2.4rem);font-weight:700;overflow-wrap:anywhere}.cert .sm{font:700 .8rem var(--font);letter-spacing:.12em;text-transform:uppercase;color:#7a6aa8}
+table.tt{border-collapse:collapse;width:100%;min-width:560px;background:var(--card);font-size:.85rem}table.tt th,table.tt td{border:1px solid var(--line);padding:8px}table.tt th{background:var(--bg2)}table.tt .today{background:rgba(255,79,163,.18)}
+.sc{overflow-x:auto}pre.code{background:#1e1f2b;color:#e8e8f0;border-radius:8px;padding:12px;font:14px/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;cursor:pointer;min-height:46px}.opt[aria-pressed="true"]{border-color:var(--pink);color:var(--pink)}
+.pin{border-color:var(--orange)}.wanted{border:4px solid var(--orange);text-align:center}
+@media print{body *{visibility:hidden}#certwrap,#certwrap *,#ttwrap,#ttwrap *{visibility:visible}#certwrap,#ttwrap{position:absolute;left:0;top:0;width:100%}#rain{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Notice Board</h1>
+<p class="tag">Important notices, mostly dots.....</p>
+<p class="sub">Read all notices carefully. Dismiss the ones you have read. They are saved on this device only.</p>
+</section>
+<p><b>Please read.</b> <i>Sir E will ask questions.</i></p>
+<div class="row2"><button class="btn alt small" id="rs" type="button">Restore all notices</button></div>
+<div class="grid" id="nb" style="margin-top:14px"></div>
+<section class="card" style="margin-top:18px"><h3>Useful links</h3><ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn" target="_blank" rel="noopener noreferrer">MDN: Learn web development</a></li>
+<li><a href="https://docs.github.com/en/pages/quickstart" target="_blank" rel="noopener noreferrer">GitHub Pages quickstart</a></li></ul></section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var N=[["pin","Class fan: still not working.....","Ticket #1 remains open. Please do not ask."],["","Laptops","Charge your laptop before class. No charger, no code."],["","Make sure it is public.....","Everything you publish must be public. Never include private details."],["","Lost and Found","One semicolon is waiting to be claimed."],["","Reminder","Close your tags. All of them."],["","Attendance","Class attendance: 1 joined, 22 on the way (Wi-Fi)."]];
+var gone=[];try{gone=JSON.parse(ls.get("awc-notices","[]"));if(!Array.isArray(gone))gone=[]}catch(e){gone=[]}
+function draw(){var b=$("nb");b.textContent="";N.forEach(function(n,i){if(gone.indexOf(i)>=0)return;var c=el("div","card"+(n[0]?" pin":""));
+ c.append(el("h3","",(n[0]?"\uD83D\uDCCC ":"")+n[1]),el("p","",n[2]));var d=el("button","btn alt small","Dismiss");d.type="button";d.onclick=function(){gone.push(i);ls.set("awc-notices",JSON.stringify(gone));draw()};c.append(d);b.append(c)});
+ if(!b.children.length)b.append(el("p","muted","All notices read. Sir E: Ok....."))}
+$("rs").onclick=function(){gone=[];ls.set("awc-notices","[]");draw()};draw();
+});
+</script>
+</body>
+</html>

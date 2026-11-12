@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Excuse Office: Funny Excuse Generator for Coders</title>
+<meta name="description" content="Pick a coding situation and get a fresh excuse. Includes a make-it-worse button and an excuse of the day.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Excuse Office</h1>
+<p class="tag">Fresh excuses, baked daily.</p>
+<p class="sub">Pick a situation. Get an excuse. Sir E will say Ok.....</p>
+</section>
+<section class="card">
+<label for="sit">What happened?</label>
+<select id="sit"></select>
+<div class="row2"><button class="btn" id="go" type="button">Give me an excuse</button><button class="btn alt" id="worse" type="button">Make it worse</button><button class="btn alt small" id="cp" type="button">Copy</button></div>
+<div class="out2" id="out" aria-live="polite">Your excuse will appear here.</div>
+</section>
+<section class="card" style="margin-top:16px"><h2>Excuse of the day</h2><p id="day"></p></section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var E={
+"My code does not run":["The code worked until it noticed you were watching.","A semicolon is on holiday.","The laptop needs emotional support.","It was running. Then I breathed."],
+"I did not push to GitHub":["Git and I are not speaking right now.","I pushed it in my heart.","My data finished at the worst moment.","I pushed it. The internet did not receive it."],
+"I missed the deadline":["The deadline moved without telling me.","I was debugging a bug that was not there.","My brain was still loading.","The clock and I disagree."],
+"My page looks different on my phone":["The phone is not ready for my talent.","It is a feature called surprise layout.","Responsive design is a rumour."],
+"I did not do my homework":["I did it, then the bug ate it.","I was training my patience.","The homework and I need space."],
+"I was late":["I was stuck in a loop.","The stairs threw an exception.","I was waiting for the page to load."]
+};
+var W=[" Also, the class fan is not working."," Sir E will understand....."," It is a known bug."," This is not my fault, it is the cache."," I have a ticket number for it."];
+var cur="";
+Object.keys(E).forEach(function(k){$("sit").append(new Option(k,k))});
+function make(){cur=pick(E[$("sit").value]);$("out").textContent=cur}
+$("go").onclick=make;$("sit").onchange=make;
+$("worse").onclick=function(){if(!cur)make();cur+=pick(W);$("out").textContent=cur};
+$("cp").onclick=function(){if(!cur)return;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(cur).then(function(){$("out").textContent=cur+"  (copied)"},function(){})};
+var all=[];Object.keys(E).forEach(function(k){all=all.concat(E[k])});
+var d=new Date();$("day").textContent=all[Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000)%all.length];
+});
+</script>
+</body>
+</html>

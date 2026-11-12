@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Library: Funny Coding Books With Real Tips</title>
+<meta name="description" content="Fake coding books with a joke on page one and one real beginner tip inside. Tap a book to open it.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Library</h1>
+<p class="tag">HTML for Beginners (Chapter 1 of 47).</p>
+<p class="sub">Tap a book to open page one. Every book hides one real tip.</p>
+</section>
+<div class="grid" id="shelf"></div>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var B=[
+["HTML for Beginners (Chapter 1 of 47)","Page 1: Chapter 1 is very long.","Real tip: start every page with <!DOCTYPE html> and always close your tags."],
+["The Art of Ctrl+Z","Page 1: The greatest shortcut ever invented.","Real tip: Ctrl+Z undoes your last change. Save often with Ctrl+S."],
+["CSS: A Horror Story","Page 1: It was a dark and stormy !important.","Real tip: press F12 in your browser to inspect and test CSS live."],
+["Pushing to Main: A Memoir","Page 1: I did not make a branch.","Real tip: make a branch before big changes, so main stays safe."],
+["Semicolons: A Detective Novel","Page 1: Where were you on line 12?","Real tip: read an error message from the top. The first error often explains the rest."],
+["Final-Final-V2: The Sequel","Page 1: It was not the final one.","Real tip: use Git commits to keep versions, instead of renaming files."],
+["Console.log: The Complete Works","Page 1: here","Real tip: print a variable with console.log to see what it holds while you debug."]
+];
+B.forEach(function(b){var c=el("button","bk");c.type="button";c.append(el("b","","\uD83D\uDCD5 "+b[0]));var d=el("div");d.hidden=true;d.append(el("div","det",b[1]),el("div","tip",b[2]));c.append(d);c.onclick=function(){d.hidden=!d.hidden};$("shelf").append(c)});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lost and Found: Missing Semicolons and Closing Tags</title>
+<meta name="description" content="Lost semicolons, missing brackets and forty browser tabs. Claim an item or report something you lost.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Lost and Found</h1>
+<p class="tag">One semicolon found inside a div.</p>
+<p class="sub">Everything here was lost by a coder. Try to claim something.</p>
+</section>
+<div class="grid" id="items"></div>
+<section class="card" style="margin-top:18px">
+<label for="lost">Report a lost item (not saved anywhere)</label>
+<input type="text" id="lost" maxlength="60" autocomplete="off" placeholder="My motivation">
+<div class="row2"><button class="btn small" id="rep" type="button">Report</button></div>
+<p class="msg2" id="msg" role="status"></p>
+</section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var I=[["One semicolon","Found inside a div. Possibly from line 12."],["A closing tag","Lost since Monday. Last seen near a heading."],["Someone's confidence","Left behind after demo day."],["Forty-two browser tabs","Unclaimed. Still loading."],["One charger","Never claimed. Everyone borrows it."],["A missing bracket","Found at the end of the file, hiding."]];
+var R=["Not yours.....","Please show proof: a public GitHub link.....","Claimed. Sir E: Ok.....","Are you sure it is yours?.....","See me after class....."];
+I.forEach(function(x){var c=el("div","card");c.append(el("h3","",x[0]),el("p","muted",x[1]));var b=el("button","btn small","Claim");b.type="button";var m=el("p","det");b.onclick=function(){m.textContent=pick(R)};c.append(b,m);$("items").append(c)});
+var BAD=/\b(fuck|shit|bitch|idiot|stupid|dumb)\b/i;
+$("rep").onclick=function(){var v=$("lost").value.trim().slice(0,60);if(!v){$("msg").textContent="Type what you lost first.";return}
+ if(BAD.test(v)){$("msg").textContent="Please keep it respectful.....";return}
+ var c=el("div","card");c.append(el("h3","",v),el("p","muted","Reported just now. Searching....."));$("items").prepend(c);$("lost").value="";$("msg").textContent="Reported. Sir E: Ok....."};
+});
+</script>
+</body>
+</html>

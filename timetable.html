@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Timetable Office: A Fake Class Timetable</title>
+<meta name="description" content="A funny weekly class timetable with lessons like Debugging Your Feelings and Naming Variables x. Print it.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+.cert{background:#fffdf4;color:#1d1238;border:10px double #5a24c7;border-radius:6px;padding:24px 16px;text-align:center;max-width:680px;margin:16px auto;font-family:Georgia,serif}
+.cert h2{color:#c21d72;font-size:clamp(1.5rem,6vw,2.2rem);margin:.3em 0}.cert .nm{font-size:clamp(1.6rem,7vw,2.4rem);font-weight:700;overflow-wrap:anywhere}.cert .sm{font:700 .8rem var(--font);letter-spacing:.12em;text-transform:uppercase;color:#7a6aa8}
+table.tt{border-collapse:collapse;width:100%;min-width:560px;background:var(--card);font-size:.85rem}table.tt th,table.tt td{border:1px solid var(--line);padding:8px}table.tt th{background:var(--bg2)}table.tt .today{background:rgba(255,79,163,.18)}
+.sc{overflow-x:auto}pre.code{background:#1e1f2b;color:#e8e8f0;border-radius:8px;padding:12px;font:14px/1.5 var(--mono);overflow-x:auto;margin:8px 0}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;cursor:pointer;min-height:46px}.opt[aria-pressed="true"]{border-color:var(--pink);color:var(--pink)}
+.pin{border-color:var(--orange)}.wanted{border:4px solid var(--orange);text-align:center}
+@media print{body *{visibility:hidden}#certwrap,#certwrap *,#ttwrap,#ttwrap *{visibility:visible}#certwrap,#ttwrap{position:absolute;left:0;top:0;width:100%}#rain{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Timetable Office</h1>
+<p class="tag">The class timetable. The real one is worse.</p>
+<p class="sub">A pretend weekly timetable. Today is highlighted.</p>
+</section>
+<div class="row2" style="margin-bottom:10px"><button class="btn small alt" id="prt" type="button">Print this timetable</button></div>
+<div class="card"><h3>Today</h3><p id="today"></p></div>
+<div id="ttwrap" class="sc" style="margin-top:14px"><table class="tt" id="tt"></table></div>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var D=["Mon","Tue","Wed","Thu","Fri"],P=["Period 1","Period 2","Break","Period 3","Period 4"];
+var T=[["Debugging your feelings","CSS (pray)","Break","Naming variables x","Push or panic"],["Tabs vs spaces","Closing 40 tabs","Break","Blame the Wi-Fi","Group project (one person works)"],["Googling 101","Why it worked yesterday","Break","Fake it till it compiles","Ctrl+Z practice"],["Semicolon search","Copy and paste art","Break","Reading errors (second try)","Sleep"],["Demo day","Excuse writing","Break","Fix the class fan (postponed)","Make sure it is public"]];
+var t=$("tt"),h=el("tr");h.append(el("th","","")); D.forEach(function(d){h.append(el("th","",d))});t.append(h);
+var td=new Date().getDay()-1;
+P.forEach(function(p,r){var tr=el("tr");tr.append(el("th","",p));D.forEach(function(d,c){var x=el("td",c===td?"today":"",T[c][r]);tr.append(x)});t.append(tr)});
+$("today").textContent=td>=0&&td<5?"Today is "+D[td]+": "+T[td].join(", ")+".":"No lessons at the weekend. Sir E: Rest.....";
+$("prt").onclick=function(){window.print()};
+});
+</script>
+</body>
+</html>
