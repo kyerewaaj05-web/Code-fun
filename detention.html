@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detention Office: Write Your Lines</title>
+<meta name="description" content="Type the line five times. Sir E is watching.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Detention Office</h1>
+<p class="tag">Write your lines.</p>
+<p class="sub">You found the secret page. Type the line below exactly, five times.</p>
+</section>
+<section class="card">
+<p class="count" style="font-size:1.1rem" id="line"></p>
+<p>Lines done: <b id="dn">0</b> of 5</p>
+<label for="in">Type the line</label>
+<input type="text" id="in" autocomplete="off" spellcheck="false" autocapitalize="off">
+<div class="row2"><button class="btn" id="ck" type="button">Submit line</button><button class="btn alt small" id="lv" type="button">Leave detention</button></div>
+<p class="msg2" id="msg" role="status"></p></section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var L=["I will make a branch before I push to main.","I will read the error message from the top.","I will save the file before I run it.","I will close all of my tags."];
+var line=pick(L),done=0;
+function norm(s){return s.toLowerCase().replace(/\s+/g," ").trim()}
+$("line").textContent=line;
+function check(){var m=$("msg");if(done>=5)return;
+ if(norm($("in").value)===norm(line)){done++;$("dn").textContent=done;$("in").value="";
+  if(done>=5){m.textContent="Detention over. Sir E: Ok.....\uD83D\uDE4F";$("in").disabled=true;$("ck").disabled=true}else m.textContent="Line "+done+" done. Again....."}
+ else m.textContent="Not quite. Sir E: Please read the line again.....";$("in").focus()}
+$("ck").onclick=check;$("in").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();check()}});
+$("lv").onclick=function(){$("msg").textContent="Sit down. Sir E: You have not finished.....";$("in").focus()};
+});
+</script>
+</body>
+</html>
