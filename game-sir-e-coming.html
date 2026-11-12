@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sir E Is Coming: A Hide-the-Game Reaction Game</title>
+<meta name="description" content="Keep coding, but hide the moment Sir E is coming. A quick reaction game with three lives and three difficulties.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.05rem var(--mono);color:var(--cyan);margin:12px 0}
+.stage{position:relative;max-width:560px;margin:14px auto;background:var(--card);border:3px solid var(--line);border-radius:14px;padding:18px;min-height:230px}
+.pbar{height:14px;background:var(--bg2);border-radius:8px;overflow:hidden;margin:10px 0 16px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--pink),var(--orange))}
+.warn{background:var(--orange);color:#000;font:800 1.3rem var(--mono);border-radius:10px;padding:12px;margin:12px 0}
+.sheet{position:absolute;inset:0;background:#fff;color:#111;border-radius:11px;padding:16px;text-align:left;font:14px var(--mono)}
+.sheet td,.sheet th{border:1px solid #bbb;padding:4px 10px}
+.row2{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.res{font:700 1.1rem var(--mono);color:var(--orange);min-height:2em}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.ctr{text-align:center}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>Sir E Is Coming!</h1>
+<p class="sub" style="margin:0 auto">Write code. When the warning flashes, press Alt-Tab (or the Space key) before Sir E arrives. Miss it three times and you are caught.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span>Hidden: <b id="sc">0</b></span><span id="lv">Lives: 3</span><span>Best: <b id="bs">0</b></span></div>
+<div class="stage" id="stage">
+<div>Project: Super Important Homework</div>
+<div class="pbar"><i id="pb"></i></div>
+<div class="warn" id="warn" role="alert" hidden>Sir E is coming.....</div>
+<div class="row2"><button class="btn" id="code" type="button" disabled>Write code</button><button class="btn alt" id="alt" type="button" disabled>Alt-Tab</button></div>
+<div class="sheet" id="sheet" hidden><b>Homework.xlsx</b><table><tr><th>Name</th><th>Marks</th></tr><tr><td>Ok sir</td><td>10</td></tr><tr><td>Ok.....</td><td>10</td></tr><tr><td>Total</td><td>Ok.....</td></tr></table></div>
+</div>
+<div class="res" id="res" role="status" aria-live="polite"></div>
+<p><button class="btn" id="go" type="button">Start game</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="sir-e-coming";
+var P={easy:{gap:[3000,6000],win:2000},normal:{gap:[2000,4500],win:1400},hard:{gap:[1500,3500],win:900}};
+var score=0,lives=3,on=false,warning=false,cool=false,prog=0,tNext=0,tWarn=0;
+function say(t){$("res").textContent=t}
+function hud(){$("sc").textContent=score;$("lv").textContent="Lives: "+lives}
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};$("bs").textContent=GC.best(NAME);
+function sched(){if(!on)return;var p=P[GC.diff()];tNext=setTimeout(warn,p.gap[0]+Math.random()*(p.gap[1]-p.gap[0]))}
+function warn(){if(!on)return;if(document.hidden){sched();return}warning=true;$("warn").hidden=false;tWarn=setTimeout(caught,P[GC.diff()].win)}
+function caught(){warning=false;$("warn").hidden=true;lives--;hud();if(lives<=0){end();return}say("Sir E saw you. Lives left: "+lives+".....");sched()}
+function hide(){
+ if(!on||cool)return;cool=true;$("sheet").hidden=false;$("alt").disabled=true;
+ if(warning){warning=false;clearTimeout(tWarn);$("warn").hidden=true;score++;hud();say("Hidden in time. Ok.....");sched()}
+ setTimeout(function(){$("sheet").hidden=true},600);setTimeout(function(){cool=false;if(on)$("alt").disabled=false},1200);
+}
+function end(){
+ on=false;clearTimeout(tNext);clearTimeout(tWarn);warning=false;$("warn").hidden=true;$("sheet").hidden=true;$("code").disabled=$("alt").disabled=true;
+ var nb=GC.setBest(NAME,score);$("bs").textContent=GC.best(NAME);GC.award("first");if(score>=15)GC.award("dots");
+ say("Sir E: What are you doing?..... You hid "+score+" time"+(score===1?"":"s")+"."+(nb&&score>0?" New best!":""));
+ $("go").disabled=false;$("df").disabled=false;$("go").textContent="Play again";$("sh").hidden=false;
+}
+$("code").onclick=function(){if(!on)return;prog+=4;if(prog>=100){prog=0;say("Project finished. Starting a new one.....")}$("pb").style.width=prog+"%"};
+$("alt").onclick=hide;
+document.addEventListener("keydown",function(e){if(on&&(e.key===" "||e.key==="Escape")){e.preventDefault();hide()}});
+$("go").onclick=function(){score=0;lives=3;on=true;cool=false;prog=0;$("pb").style.width="0";hud();say("");$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;$("code").disabled=false;$("alt").disabled=false;sched()};
+$("sh").onclick=function(){var t=GC.share("Sir E Is Coming!",score+" hides");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){say("Copied.")},function(){});else say(t)};
+});
+</script>
+</body>
+</html>

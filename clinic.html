@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Health Clinic: Healthy Coding Habits for Students</title>
+<meta name="description" content="Friendly tips for coders: drink water, rest your eyes with the 20-20-20 rule, stretch, sleep and ask for help. Includes a 20-second eye break timer.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.big{font:800 3rem var(--mono);color:var(--cyan);text-align:center;margin:8px 0}
+.say{text-align:center;color:var(--orange);font-family:var(--mono);min-height:1.8em}
+.ctr{text-align:center}
+.card .joke{color:var(--orange);font-family:var(--mono);font-size:.92rem}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Health Clinic</h1>
+<p class="tag">Debugging your feelings. Drink water.</p>
+<p class="sub">Friendly habits for people who code a lot. These are general tips, not medical advice.</p>
+</section>
+
+<section aria-labelledby="eb">
+<h2 id="eb">20-second eye break</h2>
+<div class="card ctr">
+<p>Every 20 minutes, look at something about 20 feet (6 metres) away for 20 seconds. It rests your eyes.</p>
+<div class="big" id="clock" aria-hidden="true">20</div>
+<p class="say" id="say" role="status"></p>
+<button class="btn" id="go" type="button">Start eye break</button>
+</div>
+</section>
+
+<section aria-labelledby="tp">
+<h2 id="tp">Sir E's prescriptions</h2>
+<div class="grid" id="tips"></div>
+</section>
+
+<section aria-labelledby="nt">
+<h2 id="nt">When it feels like too much</h2>
+<div class="card">
+<p>Feeling very stressed, tired or sad is not a bug you must fix alone. Talk to a parent, a teacher or someone you trust. Asking for help is a skill, and every good coder uses it.</p>
+</div>
+</section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+var T=[
+["Drink water","Keep a bottle next to your laptop. Sip while the code compiles.","Sir E: Drink water, then continue....."],
+["Rest your eyes","Use the 20-20-20 rule above. Blink more than you think you need to.","Sir E: The screen will still be there....."],
+["Stretch","Roll your shoulders and gently stretch your hands and wrists between tasks.","Sir E: Typing is a sport....."],
+["Sleep","Tired brains write more bugs. A good night's sleep helps you think clearly.","Sir E: Do not push to main at 3 am....."],
+["Ask for help","Stuck for 20 minutes? Explain the problem to a friend or teacher.","Sir E: Which part did you not understand?....."],
+["Mistakes are normal","Every coder writes bugs. Fixing them is the job, not a failure.","Sir E: Read the error message from the top....."]
+];
+T.forEach(function(t){var c=el("div","card");c.append(el("h3","",t[0]),el("p","",t[1]),el("p","joke",t[2]));$("tips").append(c)});
+var tm=null;
+$("go").onclick=function(){var n=20;clearInterval(tm);$("go").disabled=true;$("clock").textContent=n;$("say").textContent="Look at something far away.....";
+ tm=setInterval(function(){if(document.hidden)return;n--;$("clock").textContent=n;
+  if(n<=0){clearInterval(tm);$("say").textContent="Done. Well done. Ok.....";$("go").disabled=false;$("go").textContent="Start again"}},1000)};
+});
+</script>
+</body>
+</html>

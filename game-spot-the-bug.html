@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spot the Bug: Find the Broken Line of Code</title>
+<meta name="description" content="A coding game for beginners. Tap the line with the bug in short HTML, CSS and JavaScript snippets, then learn why it breaks.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.05rem var(--mono);color:var(--cyan);margin:12px 0}
+.code{margin:14px auto;max-width:640px;text-align:left}
+.ln{display:block;width:100%;text-align:left;background:#1e1f2b;color:#e8e8f0;border:2px solid transparent;border-radius:6px;padding:9px 12px;margin:4px 0;font:15px/1.4 var(--mono);cursor:pointer;min-height:44px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ln:hover{border-color:var(--pink)}
+.ln.ok{border-color:#2ee59d;background:#12382b}
+.ln.bad{border-color:#ff5c5c;background:#3d1620}
+.ln b{color:#8b8fb5;margin-right:10px;font-weight:400}
+.exp{max-width:640px;margin:10px auto;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:10px;padding:12px 14px}
+.res{font:700 1.15rem var(--mono);color:var(--orange);min-height:2em}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.ctr{text-align:center}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>Spot the Bug</h1>
+<p class="sub" style="margin:0 auto">Each snippet has one broken line. Tap it. Easy has no timer, Normal gives 20 seconds, Hard gives 10.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span id="pg">Ready</span><span>Score: <b id="sc">0</b></span><span id="tm"></span><span>Best: <b id="bs">0</b></span></div>
+<div class="code" id="code" aria-live="polite"></div>
+<div class="exp" id="exp" hidden role="status"></div>
+<div class="res" id="res" role="status"></div>
+<p><button class="btn" id="go" type="button">Start game</button> <button class="btn alt" id="nx" type="button" hidden>Next</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="spot-the-bug",N=8;
+/* ===== Add snippets here: [lines, bug line number(s) starting at 0, explanation] ===== */
+var S=[
+[["<h1>My Page","<p>Hello world</p>","<a href=\"page.html\">Home</a>"],[0],"The <h1> tag is never closed. Add </h1> at the end of the line."],
+[["let name = \"Ama\";","console.log(Name);","// prints the name"],[1],"JavaScript is case sensitive. Name is not the same as name, so this fails."],
+[["for (let i = 0; i < 3; i++) {","  console.log(i);","}","console.log(\"done\";"],[3],"The closing bracket ) is missing after \"done\"."],
+[["p {","  color: blue","  font-size: 18px;","}"],[1],"A CSS declaration needs a semicolon. Without it, the next line is ignored."],
+[["<img src=\"cat.png\">","<a href=\"home.html\">Home<a>","<p>Welcome</p>"],[1],"The link is closed with <a> instead of </a>."],
+[["let total = 0;","if (total = 5) {","  console.log(\"five\");","}"],[1],"A single = assigns a value. To compare, use === ."],
+[["const nums = [1, 2, 3];","nums.push(4);","nums = [5, 6];"],[2],"A const variable cannot be given a new value. Use let, or change its contents instead."],
+[["function add(a, b) {","  a + b;","}","console.log(add(2, 3));"],[1],"The function never returns the answer. It needs return a + b; ."],
+[[".card {","  backgroud: pink;","  padding: 10px;","}"],[1],"The property is misspelled. It should be background."],
+[["<!DOCTYPE html>","<html>","<body>","<p>Hello</p>","</html>","</body>"],[4,5],"Tags must close in reverse order. </body> must come before </html>."],
+[["let greeting = 'Hello;","console.log(greeting);"],[0],"The string starts with a quote but never ends with one."],
+[["const days = [\"Mon\", \"Tue\", \"Wed\"];","console.log(days[3]);"],[1],"Counting starts at 0, so the last item is days[2]. days[3] does not exist."]
+];
+/* ======================================================================================= */
+var Q=[],i=0,score=0,left=0,tm=null,done=false;
+var T={easy:0,normal:20,hard:10};
+function shuf(a){return a.slice().sort(function(){return Math.random()-.5})}
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};$("bs").textContent=GC.best(NAME);
+function ask(){
+ var q=Q[i],c=$("code");c.textContent="";done=false;$("exp").hidden=true;$("nx").hidden=true;$("res").textContent="";
+ $("pg").textContent="Question "+(i+1)+" of "+N;
+ q[0].forEach(function(t,n){var b=document.createElement("button");b.type="button";b.className="ln";
+  var num=document.createElement("b");num.textContent=(n+1);b.append(num,document.createTextNode(t));b.onclick=function(){pick(n)};c.append(b)});
+ clearInterval(tm);var s=T[GC.diff()];left=s;$("tm").textContent=s?"Time: "+s:"";
+ if(s)tm=setInterval(function(){if(document.hidden)return;left--;$("tm").textContent="Time: "+left;if(left<=0)pick(-1)},1000);
+}
+function pick(n){
+ if(done)return;done=true;clearInterval(tm);var q=Q[i],ok=q[1].indexOf(n)>=0;
+ if(ok)score++;$("sc").textContent=score;
+ var bs=$("code").children;q[1].forEach(function(k){bs[k].className="ln ok"});if(n>=0&&!ok)bs[n].className="ln bad";
+ $("exp").hidden=false;$("exp").textContent=(ok?"Correct! ":n<0?"Time is up. ":"Not quite. ")+q[2];
+ $("nx").hidden=false;$("nx").textContent=i+1<N?"Next":"See result";
+}
+function end(){
+ clearInterval(tm);$("code").textContent="";$("exp").hidden=true;$("nx").hidden=true;$("tm").textContent="";$("pg").textContent="Finished";
+ var nb=GC.setBest(NAME,score);$("bs").textContent=GC.best(NAME);GC.award("first");
+ $("res").textContent="Score: "+score+" of "+N+". "+(score===N?"Perfect. Who did you copy from?.....":score>=6?"Not bad. Suspicious.....":score>=3?"See me after class.....":"Please read the question again.....")+(nb&&score>0?" New best!":"");
+ $("go").disabled=false;$("df").disabled=false;$("go").textContent="Play again";$("sh").hidden=false;
+}
+$("nx").onclick=function(){i++;if(i<N)ask();else end()};
+$("go").onclick=function(){Q=shuf(S).slice(0,N);i=0;score=0;$("sc").textContent=0;$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;ask()};
+$("sh").onclick=function(){var t=GC.share("Spot the Bug",score+" out of "+N);if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("res").textContent="Copied."},function(){});else $("res").textContent=t};
+window.AWC_SPOT={S:S};
+});
+</script>
+</body>
+</html>
