@@ -70,6 +70,7 @@ function buildFooter(){
  var f=mk("footer"),w=mk("div","wrap");
  w.append(mk("p",0,"This is a parody. Not a real department. Nothing here is a real person, and any resemblance is a bug."));
  w.append(mk("p",0,"Made by the Chief Bug Officer. Sir E has been asked to fix the fan....."));
+ var nv=mk("p");[["about.html","About"],["privacy.html","Privacy"],["register.html","Sign the Class Register"]].forEach(function(l,i){if(i)nv.append(document.createTextNode(" | "));var a=mk("a",0,l[1]);a.href=l[0];nv.append(a)});w.append(nv);
  f.append(w);host.replaceWith(f);
 }
 

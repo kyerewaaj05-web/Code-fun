@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign the Class Register: Optional Nickname and Progress</title>
+<meta name="description" content="Add a nickname for a personal touch, or just visit. Save a code to move your badges and scores to another device.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.out2{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:12px;overflow-wrap:anywhere}
+.msg2{min-height:1.6em;color:var(--orange);font-family:var(--mono);margin-top:10px}
+.bk{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;cursor:pointer;min-height:56px}
+.bk:hover{border-color:var(--pink)}.bk b{display:block}
+.det{margin-top:8px;color:var(--orange);font-family:var(--mono);font-size:.9rem}
+.tip{margin-top:6px;color:var(--cyan);font-size:.9rem}
+.bin{font:.72rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Sign the Class Register</h1>
+<p class="tag">Sign in, or just visit.</p>
+<p class="sub">Optional. Your nickname and progress stay on this device. Anyone can type any name, so this is not a secure login. Never use it for passwords or private things.</p>
+</section>
+<section class="card">
+<label for="nm">Nickname or first name</label>
+<input type="text" id="nm" maxlength="20" autocomplete="off" placeholder="A nickname is fine">
+<div class="row2"><button class="btn" id="sg" type="button">Sign the register</button><button class="btn alt" id="gu" type="button">I am just visiting</button><button class="btn alt small" id="so" type="button">Sign out</button></div>
+<p class="msg2" id="st" role="status"></p></section>
+<section class="card" style="margin-top:16px"><h2>Your progress on this device</h2><p id="pr"></p></section>
+<section class="card" style="margin-top:16px"><h2>Move your progress</h2>
+<p class="muted">Save a code, then paste it on another device to bring your badges and scores along.</p>
+<div class="row2"><button class="btn small" id="sv" type="button">Make my save code</button></div>
+<label for="cd">Save code</label><input type="text" id="cd" autocomplete="off" placeholder="Your code appears here, or paste one">
+<div class="row2"><button class="btn small alt" id="ld" type="button">Load this code</button></div>
+<p class="msg2" id="cm" role="status"></p></section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)},A=window.AWC||{},ls=A.ls||{get:function(k,d){return d},set:function(){}};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function bits(s){return Array.from(new TextEncoder().encode(s)).map(function(b){return b.toString(2).padStart(8,"0")}).join(" ")}
+var BAD=/\b(fuck|shit|bitch|idiot|stupid|dumb)\b/i,PRIV=/(\d[\d\s\-]{6,}\d|\S+@\S+\.\S+)/;
+function status(){var n=ls.get("awc-cname",""),g=ls.get("awc-guest","")==="1";$("st").textContent=n?"Signed in as "+n+" on this device. Sir E: Ok.....":g?"Visiting as a guest. Sir E: Ok.....":"Not signed in. You can still use everything."}
+function prog(){var b=[],s=0,k=0;try{b=JSON.parse(ls.get("awc-badges","[]"))}catch(e){}try{s=JSON.parse(ls.get("awc-seen","[]")).length}catch(e){}k=parseInt(ls.get("awc-oksir","0"),10)||0;
+ $("pr").textContent="Badges: "+b.length+" | Cards flipped: "+s+" | Ok sirs: "+k}
+$("nm").value=ls.get("awc-cname","");
+$("sg").onclick=function(){var v=$("nm").value.trim().replace(/[<>]/g,"").slice(0,20);if(!v){$("st").textContent="Type a nickname first, or choose I am just visiting.";return}
+ if(PRIV.test(v)||BAD.test(v)){$("st").textContent="Please use a simple, respectful nickname without numbers or emails.....";return}
+ ls.set("awc-cname",v);ls.set("awc-guest","");status()};
+$("gu").onclick=function(){ls.set("awc-guest","1");status()};
+$("so").onclick=function(){ls.set("awc-cname","");ls.set("awc-claim","");ls.set("awc-guest","");$("nm").value="";status()};
+function enc(s){var b=new TextEncoder().encode(s),x="";b.forEach(function(c){x+=String.fromCharCode(c)});return btoa(x)}
+function dec(c){var x=atob(c.trim()),b=new Uint8Array(x.length);for(var i=0;i<x.length;i++)b[i]=x.charCodeAt(i);return new TextDecoder().decode(b)}
+$("sv").onclick=function(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("awc-")===0)o[k]=String(localStorage.getItem(k)).slice(0,5000)}}catch(e){}
+ $("cd").value=enc(JSON.stringify(o));$("cm").textContent="Copy this code and keep it somewhere safe."};
+$("ld").onclick=function(){var c=$("cd").value.trim();if(!c){$("cm").textContent="Paste a code first.";return}
+ try{var o=JSON.parse(dec(c)),n=0,tot=0;if(!o||typeof o!=="object"||Array.isArray(o))throw 0;
+  Object.keys(o).forEach(function(k){if(k.indexOf("awc-")===0&&typeof o[k]==="string"&&o[k].length<=5000&&tot<20000){ls.set(k,o[k]);tot+=o[k].length;n++}});
+  $("cm").textContent="Loaded "+n+" saved item"+(n===1?"":"s")+".";$("nm").value=ls.get("awc-cname","");status();prog()}
+ catch(e){$("cm").textContent="That code did not work. Check that you pasted all of it."}};
+status();prog();
+});
+</script>
+</body>
+</html>
