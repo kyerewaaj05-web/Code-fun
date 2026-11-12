@@ -1,0 +1,592 @@
+{
+ "version": 1,
+ "note": "All characters are fictional. Set hidden to true to show a Mystery Coder card. publicFirstName is added by the boss only when a person asks.",
+ "people": [
+  {
+   "id": "captain-semicolon",
+   "name": "Captain Semicolon",
+   "type": "archetype",
+   "emoji": "🦸",
+   "title": "Chief Missing-Character Officer",
+   "roast": "Finds every bug except the missing semicolon.",
+   "comment": "Please check line 12..... and line 13.....",
+   "grade": "C+",
+   "stats": {
+    "bugs": 142,
+    "tabs": 37,
+    "oksir": 88,
+    "excuse": 61
+   },
+   "rarity": "Rare",
+   "traits": [
+    2,
+    3,
+    4
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "div-centerer",
+   "name": "The Div Centerer",
+   "type": "archetype",
+   "emoji": "🎯",
+   "title": "Professional Centerer (Beginner)",
+   "roast": "Centres one div and celebrates for an hour.",
+   "comment": "Use flexbox.....",
+   "grade": "B-",
+   "stats": {
+    "bugs": 96,
+    "tabs": 22,
+    "oksir": 40,
+    "excuse": 35
+   },
+   "rarity": "Common",
+   "traits": [
+    4,
+    2,
+    3
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "tab-hoarder",
+   "name": "Tab Hoarder",
+   "type": "archetype",
+   "emoji": "🗂️",
+   "title": "Keeper of 400 Tabs",
+   "roast": "Has 400 tabs open and cannot find the one that matters.",
+   "comment": "Close three tabs..... Ok.....",
+   "grade": "C",
+   "stats": {
+    "bugs": 33,
+    "tabs": 400,
+    "oksir": 52,
+    "excuse": 70
+   },
+   "rarity": "Rare",
+   "traits": [
+    1,
+    2,
+    2
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "copy-paste-chef",
+   "name": "Copy-Paste Chef",
+   "type": "archetype",
+   "emoji": "🍳",
+   "title": "Head Chef of Stack Overflow",
+   "roast": "Cooks every project from copied ingredients.",
+   "comment": "Did you read it first?.....",
+   "grade": "C+",
+   "stats": {
+    "bugs": 120,
+    "tabs": 45,
+    "oksir": 60,
+    "excuse": 50
+   },
+   "rarity": "Common",
+   "traits": [
+    3,
+    4,
+    3
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "consolelog-prophet",
+   "name": "Console.log Prophet",
+   "type": "archetype",
+   "emoji": "🔮",
+   "title": "Seer of console.log",
+   "roast": "Debugs by printing the word here forty times.",
+   "comment": "Read the error message from the top.....",
+   "grade": "B",
+   "stats": {
+    "bugs": 75,
+    "tabs": 18,
+    "oksir": 30,
+    "excuse": 40
+   },
+   "rarity": "Common",
+   "traits": [
+    3,
+    3,
+    2
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "variable-x",
+   "name": "Variable Named X",
+   "type": "archetype",
+   "emoji": "❌",
+   "title": "Namer of Things",
+   "roast": "Names every variable x, then asks what x means.",
+   "comment": "What is x?.....",
+   "grade": "D+",
+   "stats": {
+    "bugs": 210,
+    "tabs": 15,
+    "oksir": 25,
+    "excuse": 55
+   },
+   "rarity": "Common",
+   "traits": [
+    1,
+    3,
+    3
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "works-on-my-machine",
+   "name": "Works-On-My-Machine Wizard",
+   "type": "archetype",
+   "emoji": "🧙",
+   "title": "Wizard of One Laptop",
+   "roast": "Everything works, but only on one machine.",
+   "comment": "Show me on another machine.....",
+   "grade": "C",
+   "stats": {
+    "bugs": 64,
+    "tabs": 26,
+    "oksir": 90,
+    "excuse": 99
+   },
+   "rarity": "Epic",
+   "traits": [
+    3,
+    2,
+    5
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "midnight-pusher",
+   "name": "Midnight Pusher",
+   "type": "archetype",
+   "emoji": "🌙",
+   "title": "Keeper of 11:59 pm",
+   "roast": "Pushes to main at midnight and sleeps peacefully.",
+   "comment": "Make sure it is public..... 🙏",
+   "grade": "B-",
+   "stats": {
+    "bugs": 58,
+    "tabs": 30,
+    "oksir": 45,
+    "excuse": 72
+   },
+   "rarity": "Rare",
+   "traits": [
+    2,
+    5,
+    5
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "null-pointer-pigeon",
+   "name": "Null Pointer Pigeon",
+   "type": "creature",
+   "emoji": "🐦",
+   "title": "Points at Nothing",
+   "roast": "Hunts one bug and finds a different bug instead.",
+   "comment": "Where is it pointing?..... Nowhere.....",
+   "grade": "D",
+   "stats": {
+    "bugs": 404,
+    "tabs": 12,
+    "oksir": 20,
+    "excuse": 30
+   },
+   "rarity": "Common",
+   "traits": [
+    2,
+    4,
+    1
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "off-by-one-owl",
+   "name": "Off-By-One Owl",
+   "type": "creature",
+   "emoji": "🦉",
+   "title": "Always One Step Away",
+   "roast": "Is always off by one, and wise about it.",
+   "comment": "Count again.....",
+   "grade": "B-",
+   "stats": {
+    "bugs": 101,
+    "tabs": 20,
+    "oksir": 35,
+    "excuse": 28
+   },
+   "rarity": "Common",
+   "traits": [
+    5,
+    2,
+    2
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "memory-leak-mole",
+   "name": "Memory Leak Mole",
+   "type": "creature",
+   "emoji": "🕳️",
+   "title": "Forgets to Let Go",
+   "roast": "Leaves everything open and wonders why the laptop is slow.",
+   "comment": "Close what you open.....",
+   "grade": "C",
+   "stats": {
+    "bugs": 88,
+    "tabs": 150,
+    "oksir": 38,
+    "excuse": 44
+   },
+   "rarity": "Common",
+   "traits": [
+    1,
+    1,
+    3
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "race-condition-rabbit",
+   "name": "Race Condition Rabbit",
+   "type": "creature",
+   "emoji": "🐇",
+   "title": "Faster Than the Bug",
+   "roast": "Types so fast the code cannot keep up.",
+   "comment": "Slow down.....",
+   "grade": "C+",
+   "stats": {
+    "bugs": 77,
+    "tabs": 40,
+    "oksir": 28,
+    "excuse": 33
+   },
+   "rarity": "Common",
+   "traits": [
+    2,
+    5,
+    4
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "stack-overflow-stork",
+   "name": "Stack Overflow Stork",
+   "type": "creature",
+   "emoji": "🦢",
+   "title": "Delivers Answers From Other People",
+   "roast": "Delivers answers copied from the internet.",
+   "comment": "Understand it first.....",
+   "grade": "C",
+   "stats": {
+    "bugs": 66,
+    "tabs": 60,
+    "oksir": 70,
+    "excuse": 45
+   },
+   "rarity": "Rare",
+   "traits": [
+    3,
+    3,
+    4
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "merge-conflict-mongoose",
+   "name": "Merge Conflict Mongoose",
+   "type": "creature",
+   "emoji": "🥊",
+   "title": "Fights Every Merge",
+   "roast": "Turns every merge into a small war.",
+   "comment": "Resolve it calmly.....",
+   "grade": "C-",
+   "stats": {
+    "bugs": 99,
+    "tabs": 28,
+    "oksir": 55,
+    "excuse": 66
+   },
+   "rarity": "Rare",
+   "traits": [
+    1,
+    4,
+    5
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "segfault-snail",
+   "name": "Segfault Snail",
+   "type": "creature",
+   "emoji": "🐌",
+   "title": "Crashes Slowly",
+   "roast": "Crashes slowly, but always with dignity.",
+   "comment": "Read the error.....",
+   "grade": "D+",
+   "stats": {
+    "bugs": 55,
+    "tabs": 10,
+    "oksir": 15,
+    "excuse": 25
+   },
+   "rarity": "Common",
+   "traits": [
+    4,
+    1,
+    1
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "heisenbug-hippo",
+   "name": "Heisenbug Hippo",
+   "type": "creature",
+   "emoji": "🦛",
+   "title": "Bug Only When Watched",
+   "roast": "Their bugs vanish the moment anyone looks.",
+   "comment": "It was here a minute ago.....",
+   "grade": "C",
+   "stats": {
+    "bugs": 12,
+    "tabs": 25,
+    "oksir": 80,
+    "excuse": 90
+   },
+   "rarity": "Epic",
+   "traits": [
+    3,
+    3,
+    1
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "chief-excuse-officer",
+   "name": "Chief Excuse Officer",
+   "type": "title",
+   "emoji": "💼",
+   "title": "Fresh Excuse Every Deadline",
+   "roast": "Has a fresh excuse for every deadline.",
+   "comment": "Ok.....",
+   "grade": "B+",
+   "stats": {
+    "bugs": 40,
+    "tabs": 35,
+    "oksir": 99,
+    "excuse": 100
+   },
+   "rarity": "Epic",
+   "traits": [
+    4,
+    4,
+    5
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "director-of-dots",
+   "name": "Director of Dots",
+   "type": "title",
+   "emoji": "🔹",
+   "title": "Speaks Mostly in Pauses",
+   "roast": "Never finishes a sentence.....",
+   "comment": "Ok.....",
+   "grade": "A-",
+   "stats": {
+    "bugs": 5,
+    "tabs": 10,
+    "oksir": 100,
+    "excuse": 20
+   },
+   "rarity": "Epic",
+   "traits": [
+    5,
+    5,
+    3
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "vp-pushing-to-main",
+   "name": "VP of Pushing to Main",
+   "type": "title",
+   "emoji": "🚀",
+   "title": "Pushes First, Asks Never",
+   "roast": "Pushes straight to main without asking anyone.",
+   "comment": "Make a branch first.....",
+   "grade": "C",
+   "stats": {
+    "bugs": 130,
+    "tabs": 42,
+    "oksir": 48,
+    "excuse": 40
+   },
+   "rarity": "Rare",
+   "traits": [
+    1,
+    5,
+    5
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "head-of-css-prayers",
+   "name": "Head of CSS Prayers",
+   "type": "title",
+   "emoji": "🙏",
+   "title": "Layouts by Faith",
+   "roast": "Fixes layouts by praying and adding !important.",
+   "comment": "Learn the layout rules.....",
+   "grade": "C-",
+   "stats": {
+    "bugs": 150,
+    "tabs": 33,
+    "oksir": 52,
+    "excuse": 75
+   },
+   "rarity": "Common",
+   "traits": [
+    1,
+    3,
+    4
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "senior-google-searcher",
+   "name": "Senior Google Searcher",
+   "type": "title",
+   "emoji": "🔎",
+   "title": "Trusts the First Result",
+   "roast": "Solves everything with the first search result.",
+   "comment": "Did you read the second result?.....",
+   "grade": "B",
+   "stats": {
+    "bugs": 45,
+    "tabs": 70,
+    "oksir": 33,
+    "excuse": 41
+   },
+   "rarity": "Common",
+   "traits": [
+    4,
+    3,
+    2
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "minister-of-binary",
+   "name": "Minister of Binary",
+   "type": "title",
+   "emoji": "🔢",
+   "title": "Speaks 01001000 01101001",
+   "roast": "Replies to everything in binary.",
+   "comment": "Decode it first.....",
+   "grade": "A",
+   "stats": {
+    "bugs": 1,
+    "tabs": 8,
+    "oksir": 15,
+    "excuse": 10
+   },
+   "rarity": "Rare",
+   "traits": [
+    5,
+    3,
+    3
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  },
+  {
+   "id": "intern-of-semicolons",
+   "name": "Intern of Semicolons",
+   "type": "title",
+   "emoji": "📎",
+   "title": "Searches All Day",
+   "roast": "Searches for the semicolon all day.",
+   "comment": "Found one.....",
+   "grade": "B",
+   "stats": {
+    "bugs": 30,
+    "tabs": 25,
+    "oksir": 20,
+    "excuse": 15
+   },
+   "rarity": "Common",
+   "traits": [
+    4,
+    2,
+    4
+   ],
+   "publicFirstName": "",
+   "hidden": false
+  }
+ ],
+ "special": [
+  {
+   "id": "chief-bug-officer",
+   "name": "Chief Bug Officer",
+   "emoji": "👑",
+   "title": "Boss of Bugs",
+   "rarity": "Legendary",
+   "roast": "Reads every bug report and fixes half of them.",
+   "comment": "Not playable. Cannot be battled.....",
+   "stats": {
+    "bugs": 999,
+    "tabs": 50,
+    "oksir": 0,
+    "excuse": 1
+   },
+   "playable": false
+  },
+  {
+   "id": "sir-e",
+   "name": "Sir E",
+   "emoji": "🙏",
+   "title": "Untouchable",
+   "rarity": "Mythic",
+   "roast": "Always wins. Always calm.",
+   "comment": "Ok.....",
+   "stats": {
+    "bugs": 0,
+    "tabs": 1,
+    "oksir": 9999,
+    "excuse": 0
+   },
+   "playable": false
+  }
+ ]
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Games Arcade: Coding Mini Games and Badges</title>
+<meta name="description" content="Coding mini games with easy, normal and hard modes, funny badges and no sign-ups. Squash bugs and beat Sir E.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.diff{display:flex;gap:8px;flex-wrap:wrap}
+.diff button{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:10px 18px;font:700 .95rem var(--font);cursor:pointer;min-height:44px}
+.diff button[aria-pressed="true"]{border-color:var(--pink);color:var(--pink)}
+.badge{display:flex;gap:10px;align-items:center}
+.badge .ic{font-size:1.8rem}
+.badge.lock{opacity:.45}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Games Arcade</h1>
+<p class="tag">Squash bugs before they squash you.</p>
+<p class="sub">Short coding games. Your scores and badges stay on this device only.</p>
+</section>
+<section aria-labelledby="df">
+<h2 id="df">Difficulty</h2>
+<div class="diff" id="diff" role="group" aria-label="Difficulty">
+<button type="button" data-d="easy" aria-pressed="false">Easy</button>
+<button type="button" data-d="normal" aria-pressed="true">Normal</button>
+<button type="button" data-d="hard" aria-pressed="false">Hard</button>
+</div>
+</section>
+<section aria-labelledby="gm">
+<h2 id="gm">Games</h2>
+<div class="grid" id="games"></div>
+</section>
+<section aria-labelledby="bd">
+<h2 id="bd">Badge shelf</h2>
+<div class="grid" id="badges"></div>
+</section>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">The games need JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+var GC=window.GC,A=window.AWC||{},$=function(i){return document.getElementById(i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+/* ===== GAMES: add a line here when you build a new game file (game-SLUG.html) ===== */
+var G=[["bug-squash","Bug Squash","Tap the bugs before they escape."],["binary-guess","Binary Guessing","Read bits. Build numbers."],["typing-race","Typing Race","Type real code snippets fast."],["catch-charger","Catch the Charger","Keep your laptop alive."],["spot-the-bug","Spot the Bug","Find the broken line."],["guess-output","Guess the Output","What does this code print?"],["sir-e-coming","Sir E Is Coming!","Hide the game in time."]];
+/* =============================================================================== */
+function exists(u){return fetch(u,{method:"HEAD"}).then(function(r){return r.ok}).catch(function(){return true})}
+var g=$("games");
+G.forEach(function(x){
+ var c=el("div","card dept soon");c.append(el("h3","",x[1]),el("p","muted",x[2]));g.append(c);
+ exists("game-"+x[0]+".html").then(function(ok){
+  if(!ok){c.append(el("span","status","Under construction: Sir E is fixing the fan....."));return}
+  var a=el("a","card dept");a.href="game-"+x[0]+".html";a.append(el("h3","",x[1]),el("p","muted",x[2]));
+  var b=GC.best(x[0]);a.append(el("span","status",b?"Best: "+b:"Play now"));c.replaceWith(a)});
+});
+var v=el("div","card dept soon");v.append(el("h3","","The Vault"),el("p","muted","Escape the computer lab. The star game."));g.append(v);
+exists("vault.html").then(function(ok){if(!ok){v.append(el("span","status","Under construction: Sir E is fixing the fan....."));return}
+ var a=el("a","card dept");a.href="vault.html";a.append(el("h3","","The Vault"),el("p","muted","Escape the computer lab. The star game."),el("span","status","Play now"));v.replaceWith(a)});
+var bt=$("diff").querySelectorAll("button");
+function sync(){bt.forEach(function(b){b.setAttribute("aria-pressed",b.dataset.d===GC.diff())})}
+bt.forEach(function(b){b.onclick=function(){GC.setDiff(b.dataset.d);sync()}});sync();
+if((parseInt(A.ls&&A.ls.get("awc-oksir","0"),10)||0)>=50)GC.award("oksir50");
+var have=GC.earned();
+Object.keys(GC.BADGES).forEach(function(id){var c=el("div","card badge"+(have.indexOf(id)<0?" lock":""));
+ c.append(el("span","ic",have.indexOf(id)<0?"\uD83D\uDD12":"\uD83C\uDFC5"));
+ var d=el("div");d.append(el("b","",GC.BADGES[id][0]),el("div","muted",GC.BADGES[id][1]));c.append(d);$("badges").append(c)});
+});
+</script>
+</body>
+</html>

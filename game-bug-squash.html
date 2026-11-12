@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bug Squash: A 20-Second Coding Game</title>
+<meta name="description" content="Tap the bugs before they escape. Golden bugs give bonus points. Do not tap the semicolons.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.holes{display:grid;grid-template-columns:repeat(3,minmax(0,96px));gap:12px;justify-content:center;margin:18px 0}
+.hole{height:96px;font-size:44px;border-radius:50%;background:var(--bg2);border:3px solid var(--line);color:var(--text);cursor:pointer;padding:0;min-height:0}
+.hole:active{transform:scale(.94)}
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.1rem var(--mono);color:var(--cyan)}
+.res{text-align:center;font:700 1.15rem var(--mono);color:var(--orange);min-height:2.4em}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.ctr{text-align:center}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>Bug Squash</h1>
+<p class="sub" style="margin:0 auto">Tap bugs +1. Golden bugs +5. Semicolons -3. You have 20 seconds.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span>Score: <b id="sc">0</b></span><span>Time: <b id="tm">20</b></span><span>Best: <b id="bs">0</b></span></div>
+<div class="holes" id="holes"></div>
+<div class="res" id="res" role="status" aria-live="polite"></div>
+<p><button class="btn" id="go" type="button">Start game</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="bug-squash";
+var P={easy:{ms:1000,decoy:.1,gold:.12},normal:{ms:750,decoy:.15,gold:.1},hard:{ms:520,decoy:.22,gold:.08}};
+var hs=[],kind=[],score=0,time=20,t1=null,t2=null,on=false;
+for(var i=0;i<9;i++){(function(n){var b=document.createElement("button");b.type="button";b.className="hole";b.setAttribute("aria-label","Hole "+(n+1));
+ b.onclick=function(){if(!on||!kind[n])return;var k=kind[n];score=Math.max(0,score+(k==="gold"?5:k==="decoy"?-3:1));kind[n]="";b.textContent="";$("sc").textContent=score};
+ hs.push(b);kind.push("");$("holes").append(b)})(i)}
+function clear(){hs.forEach(function(b,n){b.textContent="";kind[n]=""})}
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};
+$("bs").textContent=GC.best(NAME);
+function end(){on=false;clearInterval(t1);clearInterval(t2);clear();$("go").disabled=false;$("df").disabled=false;
+ var nb=GC.setBest(NAME,score);$("bs").textContent=GC.best(NAME);GC.award("first");if(score>=20)GC.award("slayer");
+ $("res").textContent=(score>=15?"Bug exterminator. Hire this person.":score>=8?"Not bad. Some bugs survived.":"The bugs won. Classic.")+(nb&&score>0?" New best!":"");
+ $("sh").hidden=false}
+$("go").onclick=function(){var p=P[GC.diff()];score=0;time=20;on=true;$("sc").textContent=0;$("tm").textContent=20;$("res").textContent="";$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;
+ t1=setInterval(function(){if(document.hidden)return;time--;$("tm").textContent=time;if(time<=0)end()},1000);
+ t2=setInterval(function(){if(document.hidden)return;clear();var n=Math.floor(Math.random()*9),r=Math.random();
+  if(r<p.decoy){kind[n]="decoy";hs[n].textContent=";"}else if(r<p.decoy+p.gold){kind[n]="gold";hs[n].textContent="\u2B50"}else{kind[n]="bug";hs[n].textContent="\uD83D\uDC1B"}},p.ms)};
+$("sh").onclick=function(){var t=GC.share("Bug Squash",score);if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("res").textContent="Copied."},function(){});else $("res").textContent=t};
+});
+</script>
+</body>
+</html>
