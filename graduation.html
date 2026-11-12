@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Graduation Hall: Funny Diploma Generator</title>
+<meta name="description" content="Make a funny Doctor of Almost Working Code diploma with your nickname, honours and Sir E's signature. Print or save it as a PDF.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],select{width:100%;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:11px;font:16px var(--font)}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.dip{background:#fffdf4;color:#1d1238;border:10px double #5a24c7;border-radius:6px;padding:26px 18px;text-align:center;max-width:720px;margin:18px auto;font-family:Georgia,serif}
+.dip .sm{font:700 .8rem var(--font);letter-spacing:.14em;text-transform:uppercase;color:#7a6aa8}
+.dip h2{font-size:clamp(1.6rem,6vw,2.4rem);margin:.3em 0;color:#c21d72}
+.dip .nm{font-size:clamp(1.8rem,7vw,2.8rem);font-weight:700;margin:.3em 0;color:#1d1238;overflow-wrap:anywhere}
+.dip .seal{font-size:2.6rem}
+.dip .sig{display:flex;justify-content:space-around;gap:10px;flex-wrap:wrap;margin-top:20px}
+.dip .sig div{min-width:130px;border-top:2px solid #1d1238;padding-top:4px;font-size:.85rem}
+.dip .cur{font:italic 1.5rem cursive;color:#5a24c7;display:block;border:0}
+@media print{body *{visibility:hidden}#dipwrap,#dipwrap *{visibility:visible}#dipwrap{position:absolute;left:0;top:0;width:100%}.dip{margin:0;max-width:none}#rain{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<div id="banner"></div>
+<main id="main"><div class="wrap">
+<section class="hero" style="padding-bottom:10px">
+<h1>Graduation Hall</h1>
+<p class="tag">Doctor of Almost Working Code.</p>
+<p class="sub">Make a funny diploma. It is built in your browser, and nothing is sent anywhere.</p>
+</section>
+<section class="card">
+<label for="nm">Nickname on the diploma</label>
+<input type="text" id="nm" maxlength="24" autocomplete="off" placeholder="A nickname is fine">
+<label for="hn">Honours in</label>
+<select id="hn"><option>Excuses</option><option>Semicolon Searching</option><option>Tab Management</option><option>Dot Pronunciation</option><option>Pushing to Main</option><option>Centering Divs (Sometimes)</option></select>
+<div class="row2"><button class="btn small" id="mix" type="button">Surprise me</button><button class="btn small alt" id="prt" type="button">Print or save as PDF</button><button class="btn small alt" id="cp" type="button">Copy text</button></div>
+<p class="muted" id="msg" role="status"></p>
+</section>
+<div id="dipwrap"><div class="dip" id="dip"></div></div>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This page needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+var CL=["First Class (Barely)","Second Class (Mostly)","Third Class (Technically)","Pass (Suspicious)"],cls=CL[0],serial="AWC-0000";
+function roll(){cls=CL[Math.floor(Math.random()*CL.length)];serial="AWC-"+String(1000+Math.floor(Math.random()*9000))}
+function today(){try{return new Date().toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"})}catch(e){return new Date().toDateString()}}
+function text(){var n=$("nm").value.trim()||"Your Nickname";return n+" has earned the degree of Doctor of Almost Working Code, with honours in "+$("hn").value+" ("+cls+"). Signed by the Chief Bug Officer and Sir E....."}
+function render(){
+ var d=$("dip"),n=$("nm").value.trim().replace(/[<>]/g,"")||"Your Nickname";d.textContent="";
+ d.append(el("div","sm","Department of Almost Working Code"),el("div","seal","\uD83C\uDFC5"),el("h2","","Doctor of Almost Working Code"),
+  el("div","sm","This certifies that"),el("div","nm",n),
+  el("p","","has completed all required bugs, with honours in "+$("hn").value+"."),el("p","",cls));
+ var s=el("div","sig"),a=el("div"),b=el("div");
+ var c=el("span","cur","Chief Bug Officer");a.append(c,document.createTextNode("Chief Bug Officer"));
+ var e=el("span","cur",".....");b.append(e,document.createTextNode("Sir E"));
+ s.append(a,b);d.append(s,el("p","sm",today()+"  |  No. "+serial));
+}
+roll();render();
+$("nm").addEventListener("input",render);$("hn").onchange=render;
+$("mix").onclick=function(){roll();$("hn").selectedIndex=Math.floor(Math.random()*$("hn").options.length);render()};
+$("prt").onclick=function(){window.print()};
+$("cp").onclick=function(){var t=text();if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("msg").textContent="Copied."},function(){$("msg").textContent=t});else $("msg").textContent=t};
+});
+</script>
+</body>
+</html>

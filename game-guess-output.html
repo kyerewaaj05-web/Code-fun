@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guess the Output: A JavaScript Quiz Game</title>
+<meta name="description" content="Read a tiny JavaScript snippet and guess what it prints. Eight questions per round with explanations. The code is only shown, never run.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.05rem var(--mono);color:var(--cyan);margin:12px 0}
+pre.code{max-width:640px;margin:14px auto;text-align:left;background:#1e1f2b;color:#e8e8f0;border-radius:8px;padding:14px;font:15px/1.5 var(--mono);overflow-x:auto}
+.opts{max-width:640px;margin:0 auto}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:10px;padding:12px 14px;font:15px var(--mono);cursor:pointer;min-height:48px}
+.opt:hover{border-color:var(--pink)}.opt.ok{border-color:#2ee59d;background:#12382b;color:#fff}.opt.bad{border-color:#ff5c5c;background:#3d1620;color:#fff}
+.exp{max-width:640px;margin:10px auto;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:10px;padding:12px 14px}
+.res{font:700 1.15rem var(--mono);color:var(--orange);min-height:2em}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.ctr{text-align:center}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>Guess the Output</h1>
+<p class="sub" style="margin:0 auto">What does each tiny JavaScript snippet print? The code is only shown here, never run. Easy has no timer, Normal gives 20 seconds, Hard gives 10.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span id="pg">Ready</span><span>Score: <b id="sc">0</b></span><span id="tm"></span><span>Best: <b id="bs">0</b></span></div>
+<pre class="code" id="code" hidden></pre>
+<div class="opts" id="opts"></div>
+<div class="exp" id="exp" hidden role="status"></div>
+<div class="res" id="res" role="status"></div>
+<p><button class="btn" id="go" type="button">Start game</button> <button class="btn alt" id="nx" type="button" hidden>Next</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="guess-output",N=8;
+/* ===== Add snippets: [code, [answers], index of the right answer, explanation] ===== */
+var S=[
+["console.log(\"5\" + 3);",["8","53","Error"],1,"The + sign joins text. \"5\" is text, so the result is the text 53."],
+["console.log(\"5\" - 3);",["2","53","NaN"],0,"The minus sign only works on numbers, so \"5\" becomes the number 5. 5 - 3 is 2."],
+["let x = 10;\nx = x + 5;\nconsole.log(x);",["10","15","x5"],1,"x starts at 10, then becomes 10 + 5, which is 15."],
+["console.log(typeof \"hello\");",["string","text","hello"],0,"typeof tells you the kind of value. Text is called a string."],
+["const a = [1, 2, 3];\nconsole.log(a.length);",["2","3","4"],1,"length counts the items. There are three."],
+["console.log(10 > 5 && 3 > 4);",["true","false","Error"],1,"&& needs both sides to be true. 3 > 4 is false."],
+["let n = 0;\nfor (let i = 1; i <= 3; i++) {\n  n += i;\n}\nconsole.log(n);",["3","6","10"],1,"The loop adds 1, then 2, then 3. The total is 6."],
+["console.log(0.1 + 0.2 === 0.3);",["true","false","NaN"],1,"Computers store decimals in a way that makes 0.1 + 0.2 slightly more than 0.3."],
+["const s = \"code\";\nconsole.log(s[0]);",["c","o","code"],0,"Counting starts at 0, so s[0] is the first letter."],
+["console.log([1, 2, 3].map(n => n * 2));",["[2, 4, 6]","[1, 2, 3]","6"],0,"map runs the function on every item and returns a new array."],
+["let a;\nconsole.log(a);",["0","undefined","null"],1,"A variable with no value yet is undefined."],
+["console.log(\"Ok\" + \".\".repeat(3));",["Ok...","Ok.3","Error"],0,"repeat(3) makes ... and + joins it to Ok. Just like Sir E....."],
+["console.log(7 % 3);",["2","1","3"],1,"% gives the remainder. 7 divided by 3 is 2 with 1 left over."]
+];
+/* ================================================================================ */
+var Q=[],i=0,score=0,left=0,tm=null,done=false,T={easy:0,normal:20,hard:10};
+function shuf(a){return a.slice().sort(function(){return Math.random()-.5})}
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};$("bs").textContent=GC.best(NAME);
+function ask(){
+ var q=Q[i];done=false;$("exp").hidden=true;$("nx").hidden=true;$("res").textContent="";
+ $("pg").textContent="Question "+(i+1)+" of "+N;$("code").hidden=false;$("code").textContent=q[0];
+ var o=$("opts");o.textContent="";
+ shuf(q[1].map(function(t,k){return[t,k===q[2]]})).forEach(function(a){var b=document.createElement("button");b.type="button";b.className="opt";b.textContent=a[0];b.dataset.ok=a[1]?"1":"";b.onclick=function(){pick(b)};o.append(b)});
+ clearInterval(tm);var s=T[GC.diff()];left=s;$("tm").textContent=s?"Time: "+s:"";
+ if(s)tm=setInterval(function(){if(document.hidden)return;left--;$("tm").textContent="Time: "+left;if(left<=0)pick(null)},1000);
+}
+function pick(b){
+ if(done)return;done=true;clearInterval(tm);var ok=!!(b&&b.dataset.ok);if(ok)score++;$("sc").textContent=score;
+ Array.prototype.forEach.call($("opts").children,function(x){if(x.dataset.ok)x.className="opt ok"});if(b&&!ok)b.className="opt bad";
+ $("exp").hidden=false;$("exp").textContent=(ok?"Correct! ":b?"Not quite. ":"Time is up. ")+Q[i][3];
+ $("nx").hidden=false;$("nx").textContent=i+1<N?"Next":"See result";
+}
+function end(){
+ clearInterval(tm);$("code").hidden=true;$("opts").textContent="";$("exp").hidden=true;$("nx").hidden=true;$("tm").textContent="";$("pg").textContent="Finished";
+ var nb=GC.setBest(NAME,score);$("bs").textContent=GC.best(NAME);GC.award("first");
+ $("res").textContent="Score: "+score+" of "+N+". "+(score===N?"Perfect. Who did you copy from?.....":score>=6?"Not bad. Suspicious.....":score>=3?"See me after class.....":"Please read the question again.....")+(nb&&score>0?" New best!":"");
+ $("go").disabled=false;$("df").disabled=false;$("go").textContent="Play again";$("sh").hidden=false;
+}
+$("nx").onclick=function(){i++;if(i<N)ask();else end()};
+$("go").onclick=function(){Q=shuf(S).slice(0,N);i=0;score=0;$("sc").textContent=0;$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;ask()};
+$("sh").onclick=function(){var t=GC.share("Guess the Output",score+" out of "+N);if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("res").textContent="Copied."},function(){});else $("res").textContent=t};
+window.AWC_GO={S:S};
+});
+</script>
+</body>
+</html>

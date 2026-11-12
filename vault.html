@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Vault: Escape the Computer Lab Puzzle Game</title>
+<meta name="description" content="A puzzle adventure. Crack binary, hex, ciphers and patterns to open eight locked doors and escape the computer lab. Easy, normal and hard.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.05rem var(--mono);color:var(--cyan);margin:12px 0}
+.room{max-width:620px;margin:14px auto;background:var(--card);border:3px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--glow);text-align:left}
+.door{font-size:3rem;text-align:center;line-height:1}
+.story{color:var(--orange);font-family:var(--mono);margin:8px 0}
+.puz{background:#1e1f2b;color:#38e1ff;border-radius:8px;padding:14px;font:700 1.1rem/1.6 var(--mono);overflow-wrap:anywhere;margin:10px 0}
+.in{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.in input{flex:1;min-width:0;background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:12px;font:16px var(--mono)}
+.msg{min-height:2.4em;margin-top:10px;font-family:var(--mono);color:var(--orange)}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ctr{text-align:center}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>The Vault</h1>
+<p class="tag">Escape the computer lab. Bring a charger.</p>
+<p class="sub" style="margin:0 auto">Solve each puzzle to open the next door. Easy has 5 doors. Normal has 8 doors and hints. Hard has 8 doors and no hints.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span id="pg">Ready</span><span>Points: <b id="sc">0</b></span><span>Best: <b id="bs">0</b></span></div>
+<section class="room" id="room" hidden aria-live="polite">
+<div class="door" id="door" aria-hidden="true">🚪</div>
+<h2 id="rt" style="margin:.3em 0"></h2>
+<p class="story" id="story"></p>
+<div class="puz" id="puz"></div>
+<form class="in" id="form" autocomplete="off">
+<label for="ans" class="skip">Your answer</label>
+<input id="ans" type="text" maxlength="40" placeholder="Type your answer" autocapitalize="off" spellcheck="false">
+<button class="btn" type="submit" id="sub">Open door</button>
+</form>
+<div class="row2"><button class="btn alt small" id="hint" type="button">Hint (costs 1 point)</button><button class="btn small" id="nx" type="button" hidden>Next door</button></div>
+<p class="msg" id="msg" role="status"></p>
+</section>
+<div class="msg" id="res" role="status"></div>
+<p><button class="btn" id="go" type="button">Start the escape</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="vault";
+/* ===== ROOMS: add more rooms at the end. [title, story, puzzle, answer, hint, explanation] ===== */
+var R=[
+["The Locked Door","Sir E left. The door has a keypad that shows binary.","01001111 01001011","ok","Each group of 8 bits is one letter. 01001111 is 79, which is the letter O.","79 is O and 75 is K, so the word is OK."],
+["The Password Note","A sticky note is stuck under the keyboard.","01000100 01001111 01010100 01010011","dots","Four letters. The first is D (68).","68 = D, 79 = O, 84 = T, 83 = S. DOTS. Sir E would be proud....."],
+["The Hex Keypad","The next lock uses hex numbers.","What is hex 2A in decimal?","42","Hex digits go 0-9 then A=10. 2A means 2 sixteens plus 10.","2 x 16 = 32, plus 10 = 42."],
+["The Number Wall","Numbers glow on the wall. One is missing.","2, 4, 8, 16, ?","32","Each number is the one before it, doubled.","Doubling 16 gives 32. Powers of two are everywhere in binary."],
+["The Shift Note","A note says each letter was moved 3 steps forward.","HVFDSH","escape","Move every letter 3 steps back. H goes back to E.","H-E, V-S, F-C, D-A, S-P, H-E. ESCAPE."],
+["The Odd One Out","Four icons flash. One does not belong.","HTML, CSS, JPEG, JavaScript","jpeg","Three of these are used to build web pages. One is a picture format.","JPEG is an image format. HTML, CSS and JavaScript are the languages of the web."],
+["The Binary Sum","The server rack asks for a sum.","00000101 + 00000011 = ? (in decimal)","8","Turn each into decimal first. 00000101 is 5.","5 + 3 = 8. In binary, 00001000."],
+["The Last Door","One last word on the exit panel.","01000110 01000001 01001110","fan","Three letters. The first is F (70).","F, A, N: FAN. You escaped. Now fix the class fan....."]
+];
+/* ============================================================================================== */
+var P={easy:5,normal:8,hard:8},i=0,pts=0,tot=0,hints=0,wrong=0,solved=false,n=0;
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};$("bs").textContent=GC.best(NAME);
+function norm(s){return s.toLowerCase().replace(/[^a-z0-9]/g,"")}
+function show(){
+ var r=R[i];hints=0;wrong=0;solved=false;$("room").hidden=false;$("door").textContent="\uD83D\uDEAA";$("pg").textContent="Door "+(i+1)+" of "+n;
+ $("rt").textContent=r[0];$("story").textContent=r[1];$("puz").textContent=r[2];$("ans").value="";$("ans").disabled=false;$("sub").disabled=false;
+ $("hint").hidden=GC.diff()==="hard";$("hint").disabled=false;$("nx").hidden=true;$("msg").textContent="";$("ans").focus();
+}
+function end(){
+ $("room").hidden=true;$("pg").textContent="Escaped!";var nb=GC.setBest(NAME,pts);$("bs").textContent=GC.best(NAME);GC.award("first");GC.award("vault");
+ $("res").textContent="You escaped the computer lab with "+pts+" of "+tot+" points. Sir E: Ok....."+"\uD83D\uDE4F"+(nb?" New best!":"");
+ $("go").disabled=false;$("df").disabled=false;$("go").textContent="Play again";$("sh").hidden=false;
+}
+$("form").addEventListener("submit",function(e){
+ e.preventDefault();if(solved)return;var r=R[i],a=norm($("ans").value);if(!a)return;
+ if(a===norm(r[3])){solved=true;var g=Math.max(1,3-hints-(wrong?1:0));pts+=g;$("sc").textContent=pts;
+  $("door").textContent="\uD83D\uDD13";$("msg").textContent="Unlocked! +"+g+" point"+(g===1?"":"s")+". "+r[5];$("ans").disabled=true;$("sub").disabled=true;$("hint").disabled=true;
+  $("nx").hidden=false;$("nx").textContent=i+1<n?"Next door":"Escape!"}
+ else{wrong++;$("msg").textContent="The door stays shut. Sir E: Please read the question again.....";$("ans").select()}
+});
+$("hint").onclick=function(){if(solved)return;hints++;$("msg").textContent="Hint: "+R[i][4]};
+$("nx").onclick=function(){i++;if(i<n)show();else end()};
+$("go").onclick=function(){n=Math.min(P[GC.diff()],R.length);i=0;pts=0;tot=n*3;$("sc").textContent=0;$("res").textContent="";$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;show()};
+$("sh").onclick=function(){var t=GC.share("The Vault",pts+" of "+tot+" points");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("res").textContent="Copied."},function(){});else $("res").textContent=t};
+window.AWC_VAULT={R:R};
+});
+</script>
+</body>
+</html>
