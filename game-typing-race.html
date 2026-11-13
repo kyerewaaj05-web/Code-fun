@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Typing Race: Type Real Code Faster Than the Bot</title>
+<meta name="description" content="Type short HTML, CSS and JavaScript snippets and race a slow bot that types with dots. See your speed and accuracy. Easy, normal and hard.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.05rem var(--mono);color:var(--cyan);margin:12px 0}
+.track{max-width:600px;margin:6px auto;text-align:left;font:700 .85rem var(--mono)}
+.bar{height:16px;background:var(--bg2);border:2px solid var(--line);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0}
+#me i{background:linear-gradient(90deg,var(--violet),var(--pink))}#bot i{background:var(--orange)}
+.tg{max-width:600px;margin:16px auto;text-align:left;background:#1e1f2b;border-radius:8px;padding:14px;font:700 1.25rem/1.5 var(--mono);color:#8b8fb5;overflow-wrap:anywhere;min-height:3.4em}
+.tg .ok{color:#2ee59d}.tg .no{color:#fff;background:#ff5c5c}
+#in{width:100%;max-width:600px;background:var(--bg2);color:var(--text);border:3px solid var(--line);border-radius:10px;padding:14px;font:700 1.15rem var(--mono)}
+#in:focus{border-color:var(--pink);outline:none}
+.res{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em;margin-top:10px}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.ctr{text-align:center}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>Typing Race</h1>
+<p class="sub" style="margin:0 auto">Type each code snippet exactly, including symbols. Finish before the bot to win the round. Five rounds. Fix mistakes with backspace.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span id="pg">Ready</span><span>Wins: <b id="sc">0</b></span><span>Best: <b id="bs">0</b></span></div>
+<div id="board" hidden>
+<div class="track">You<div class="bar" id="me"><i></i></div></div>
+<div class="track">Sir E bot (types with dots.....)<div class="bar" id="bot"><i></i></div></div>
+<div class="tg" id="tg" aria-live="off"></div>
+<label for="in" class="skip">Type the snippet here</label>
+<input id="in" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" disabled>
+</div>
+<div class="res" id="res" role="status" aria-live="polite"></div>
+<p><button class="btn" id="go" type="button">Start race</button> <button class="btn alt" id="nx" type="button" hidden>Next round</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="typing-race",N=5;
+/* ===== SNIPPETS: add more lines here. Keep them short and use plain keyboard symbols ===== */
+var S=["<h1>Hello</h1>","<p>Ok sir</p>","let x = 5;","color: red;","console.log(\"hi\");","<a href=\"#\">Home</a>","const n = 10;","function go() {}","body { margin: 0; }","if (x > 3) {","<ul><li>One</li></ul>","let ok = true;","<img src=\"a.png\">","x = x + 1;"];
+/* ============================================================================================ */
+var CPS={easy:1,normal:1.8,hard:3};
+var Q=[],i=0,wins=0,wpmSum=0,accSum=0,done=0,tgt="",t0=0,tk=null,live=false,typed=0,go=0;
+function shuf(a){return a.slice().sort(function(){return Math.random()-.5})}
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};$("bs").textContent=GC.best(NAME);
+function paint(v){var h=$("tg");h.textContent="";for(var k=0;k<tgt.length;k++){var s=document.createElement("span");s.textContent=tgt[k];if(k<v.length)s.className=v[k]===tgt[k]?"ok":"no";h.append(s)}}
+function prefix(v){var k=0;while(k<v.length&&v[k]===tgt[k])k++;return k}
+function round(){
+ tgt=Q[i];typed=0;live=false;$("pg").textContent="Round "+(i+1)+" of "+N;$("board").hidden=false;$("nx").hidden=true;$("res").textContent="Get ready.....";
+ $("in").value="";$("in").disabled=true;$("me").firstChild.style.width="0";$("bot").firstChild.style.width="0";paint("");
+ go=setTimeout(function(){live=true;t0=Date.now();$("in").disabled=false;$("in").focus();$("res").textContent="Go!";
+  tk=setInterval(function(){var p=Math.min(1,(Date.now()-t0)/1000*CPS[GC.diff()]/tgt.length);$("bot").firstChild.style.width=(p*100)+"%";if(p>=1)finish(false)},100)},1200);
+}
+function finish(won){
+ if(!live)return;live=false;clearInterval(tk);var sec=(Date.now()-t0)/1000;$("in").disabled=true;
+ if(won){wins++;$("sc").textContent=wins;var wpm=Math.round(tgt.length/5/(sec/60));wpmSum+=wpm;accSum+=Math.min(100,Math.round(tgt.length/Math.max(typed,tgt.length)*100));done++;$("res").textContent="You won! "+wpm+" WPM. Sir E: Ok....."}
+ else $("res").textContent="The bot finished first. Sir E: ....."+"\uD83D\uDE4F";
+ $("nx").hidden=false;$("nx").textContent=i+1<N?"Next round":"See result";
+}
+$("in").addEventListener("input",function(e){if(!live)return;var v=$("in").value;if(e.inputType&&e.inputType.indexOf("insert")===0)typed+=(e.data||"x").length;
+ paint(v);var p=prefix(v)/tgt.length;$("me").firstChild.style.width=(p*100)+"%";if(v===tgt)finish(true)});
+function end(){
+ $("board").hidden=true;$("nx").hidden=true;$("pg").textContent="Finished";var nb=GC.setBest(NAME,wins);$("bs").textContent=GC.best(NAME);GC.award("first");
+ $("res").textContent="Wins: "+wins+" of "+N+(done?". Average speed: "+Math.round(wpmSum/done)+" WPM, accuracy "+Math.round(accSum/done)+"%.":".")+" "+(wins===N?"Perfect. Who did you copy from?.....":wins>=3?"Not bad. Suspicious.....":"See me after class.....")+(nb&&wins>0?" New best!":"");
+ $("go").disabled=false;$("df").disabled=false;$("go").textContent="Race again";$("sh").hidden=false;
+}
+$("nx").onclick=function(){i++;if(i<N)round();else end()};
+$("go").onclick=function(){Q=shuf(S).slice(0,N);i=0;wins=0;wpmSum=0;accSum=0;done=0;$("sc").textContent=0;$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;round()};
+$("sh").onclick=function(){var t=GC.share("Typing Race",wins+" wins out of "+N+(done?" at "+Math.round(wpmSum/done)+" WPM":""));if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("res").textContent="Copied."},function(){});else $("res").textContent=t};
+window.AWC_TR={S:S};
+});
+</script>
+</body>
+</html>

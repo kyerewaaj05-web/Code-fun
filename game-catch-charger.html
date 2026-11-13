@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catch the Charger: Keep Your Laptop Alive</title>
+<meta name="description" content="Slide your laptop to catch falling chargers and dodge bugs before the battery dies. Works with touch and keyboard. Easy, normal and hard.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140a30">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9B%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("awc-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+<style>
+.hud{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font:700 1.05rem var(--mono);color:var(--cyan);margin:12px 0}
+#cv{display:block;margin:10px auto;width:100%;max-width:360px;height:auto;border:3px solid var(--line);border-radius:12px;touch-action:none;background:#140a30}
+.res{font:700 1.1rem var(--mono);color:var(--orange);min-height:2.4em}
+select{background:var(--bg2);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:8px;font:inherit}
+.ctr{text-align:center}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="site-header"></div>
+<main id="main"><div class="wrap ctr">
+<section class="hero" style="padding-bottom:6px">
+<h1>Catch the Charger</h1>
+<p class="sub" style="margin:0 auto">Your battery is draining. Slide your laptop with your finger, or use the left and right arrow keys (or A and D). Catch the chargers, dodge the bugs.</p>
+</section>
+<p><label for="df">Difficulty: </label><select id="df"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></p>
+<div class="hud"><span>Chargers: <b id="sc">0</b></span><span>Best: <b id="bs">0</b></span></div>
+<canvas id="cv" width="360" height="520" aria-label="Game area: catch falling chargers with your laptop"></canvas>
+<div class="res" id="res" role="status" aria-live="polite"></div>
+<p><button class="btn" id="go" type="button">Start game</button> <button class="btn alt" id="sh" type="button" hidden>Copy result</button></p>
+<p><a href="games.html">Back to the Games Arcade</a></p>
+</div></main>
+<div id="site-footer"></div>
+<noscript><p style="padding:16px">This game needs JavaScript. Sir E says: Please enable it.....</p></noscript>
+<script src="site.js" defer></script>
+<script src="games-core.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",function(){
+"use strict";
+var GC=window.GC,$=function(i){return document.getElementById(i)},NAME="catch-charger",W=360,H=520,LW=64;
+var P={easy:{spawn:.9,speed:140,bug:.25,drain:3.5},normal:{spawn:.7,speed:190,bug:.35,drain:5},hard:{spawn:.52,speed:250,bug:.45,drain:7}};
+var cv=$("cv"),cx=cv.getContext("2d"),st={on:false,x:W/2,vx:0,bat:100,score:0,items:[],t:0,last:0,tgt:null,p:P.normal};
+$("df").value=GC.diff();$("df").onchange=function(){GC.setDiff($("df").value)};$("bs").textContent=GC.best(NAME);
+var keys={l:false,r:false};
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function step(dt){
+ if(!st.on)return;var p=st.p;
+ if(st.tgt!==null){st.x+=clamp(st.tgt-st.x,-520*dt,520*dt)}else{st.x+=((keys.r?1:0)-(keys.l?1:0))*340*dt}
+ st.x=clamp(st.x,LW/2,W-LW/2);
+ st.bat-=p.drain*dt;st.t+=dt;
+ var sp=p.speed+Math.min(st.score*3,120);
+ st.sp=(st.sp||0)+dt;if(st.sp>=p.spawn){st.sp=0;st.items.push({x:24+Math.random()*(W-48),y:-20,bug:Math.random()<p.bug})}
+ for(var i=st.items.length-1;i>=0;i--){var it=st.items[i];it.y+=sp*dt;
+  if(it.y>H-84&&it.y<H-30&&Math.abs(it.x-st.x)<LW/2+10){st.items.splice(i,1);if(it.bug){st.bat-=25}else{st.score++;st.bat=Math.min(100,st.bat+12);$("sc").textContent=st.score}}
+  else if(it.y>H+20)st.items.splice(i,1)}
+ if(st.bat<=0)end();
+}
+function draw(){
+ cx.clearRect(0,0,W,H);var g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#1e1245");g.addColorStop(1,"#140a30");cx.fillStyle=g;cx.fillRect(0,0,W,H);
+ cx.textAlign="center";cx.font="30px sans-serif";
+ st.items.forEach(function(it){cx.fillText(it.bug?"\uD83D\uDC1B":"\uD83D\uDD0C",it.x,it.y)});
+ cx.font="44px sans-serif";cx.fillText("\uD83D\uDCBB",st.x,H-40);
+ var b=Math.max(0,st.bat);cx.fillStyle="#3a2a7a";cx.fillRect(16,14,W-32,16);cx.fillStyle=b>40?"#2ee59d":b>20?"#ff9a3c":"#ff5c5c";cx.fillRect(16,14,(W-32)*b/100,16);
+ cx.fillStyle="#f4f0ff";cx.font="700 12px monospace";cx.fillText("Battery "+Math.round(b)+"%",W/2,44);
+}
+function loop(now){
+ if(!st.last)st.last=now;var dt=Math.min(.05,(now-st.last)/1000);st.last=now;
+ if(!document.hidden)step(dt);draw();if(st.on)requestAnimationFrame(loop);
+}
+function end(){
+ st.on=false;var nb=GC.setBest(NAME,st.score);$("bs").textContent=GC.best(NAME);GC.award("first");
+ $("res").textContent="Laptop died. Sir E: Ready?..... You caught "+st.score+" charger"+(st.score===1?"":"s")+"."+(nb&&st.score>0?" New best!":"");
+ $("go").disabled=false;$("df").disabled=false;$("go").textContent="Play again";$("sh").hidden=false;draw();
+}
+function pos(e){var r=cv.getBoundingClientRect();return(e.clientX-r.left)/r.width*W}
+cv.addEventListener("pointerdown",function(e){if(!st.on)return;st.tgt=pos(e);try{cv.setPointerCapture(e.pointerId)}catch(x){}});
+cv.addEventListener("pointermove",function(e){if(st.on&&e.buttons!==0||st.on&&e.pointerType==="touch")st.tgt=pos(e)});
+cv.addEventListener("pointerup",function(){st.tgt=null});cv.addEventListener("pointercancel",function(){st.tgt=null});
+document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(k==="arrowleft"||k==="a"){keys.l=true;st.tgt=null;if(st.on)e.preventDefault()}if(k==="arrowright"||k==="d"){keys.r=true;st.tgt=null;if(st.on)e.preventDefault()}});
+document.addEventListener("keyup",function(e){var k=e.key.toLowerCase();if(k==="arrowleft"||k==="a")keys.l=false;if(k==="arrowright"||k==="d")keys.r=false});
+$("go").onclick=function(){st.p=P[GC.diff()];st.on=true;st.x=W/2;st.bat=100;st.score=0;st.items=[];st.t=0;st.sp=0;st.last=0;st.tgt=null;$("sc").textContent=0;$("res").textContent="";$("sh").hidden=true;$("go").disabled=true;$("df").disabled=true;requestAnimationFrame(loop)};
+$("sh").onclick=function(){var t=GC.share("Catch the Charger",st.score+" chargers");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("res").textContent="Copied."},function(){});else $("res").textContent=t};
+window.AWC_CC={st:st,step:step,P:P};
+draw();
+});
+</script>
+</body>
+</html>
